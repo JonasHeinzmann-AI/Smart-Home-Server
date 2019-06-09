@@ -1,0 +1,64 @@
+
+.ftuiWeatherdetailTab {
+    overflow: hidden;
+}
+
+.ftuiWeatherdetailTab button {
+    border: none;
+	outline: none;
+    cursor: pointer;
+	padding: 0;
+	padding-top: 3px;
+	color: var(--fuip-color-foreground,#eeeeee);
+    background-color: initial;
+	border-color: var(--fuip-color-foreground,#eee);
+    border-width: 1px;
+    border-style: none none solid none;
+}
+
+
+.ftuiWeatherDetailOverviewColumn {
+	color: var(--fuip-color-foreground,#eeeeee);
+}
+
+
+/* Maus über dem Tab */
+.ftuiWeatherdetailTab button:hover {
+    background-color: var(--fuip-color-background-hover,#444);
+}
+
+/* Aktiver Tab */
+.ftuiWeatherdetailTab button.active {
+    border-width: 1px 1px 0px 1px;
+    border-style: solid solid none solid;
+    border-radius: 8px 8px 0px 0px;
+    border-color: var(--fuip-color-foreground,#eee);
+}
+
+/* Inhalt des Tabulators */
+.ftuiWeatherdetailTabcontent {
+    display: none; 
+	color: var(--fuip-color-foreground,#eeeeee);
+}
+
+.ftuiWeatherdetailSheet {
+	margin-top: -1px;
+	padding-top: 3px;
+	border-width: 1px;
+    border-style: none solid solid solid;
+    border-color: var(--fuip-color-foreground,#eee);
+}
+
+.ftuiWeatherdetailWeatherValue{
+    margin-right: 3px  !important;
+}
+
+.ftuiWeatherdetailWeatherUnit{
+}
+
+.ftuiWeatherDetailSpacerLine {
+    border-color: var(--fuip-color-foreground,#eee);
+}
+
+
+

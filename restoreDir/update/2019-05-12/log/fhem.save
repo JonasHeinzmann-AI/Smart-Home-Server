@@ -1,0 +1,17 @@
+#Sun May 12 14:12:29 2019
+setstate Analog0 defined
+setstate Analog0 2019-05-12 14:11:32 state defined
+setstate Arduino1 2019-05-12 14:11:40 state Initialized
+setstate Led off
+setstate Led 2019-05-12 14:11:40 state Initialized
+setstate Led 2019-05-12 14:11:40 value off
+setstate Logfile active
+setstate WEB 2019-05-12 14:11:31 state Initialized
+setstate WEBphone 2019-05-12 14:11:31 state Initialized
+setstate WEBtablet 2019-05-12 14:11:31 state Initialized
+setstate autocreate active
+setstate eventTypes active
+setstate global no definition
+setstate initialUsbCheck 2019-05-12 14:11:32
+setstate initialUsbCheck 2019-05-12 14:11:31 state active
+setstate telnetPort 2019-05-12 14:11:30 state Initialized

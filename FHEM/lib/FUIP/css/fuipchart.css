@@ -1,0 +1,58 @@
+
+text.fuipchart.title { font-size:16px; }
+
+/* all normal lines should have no fill */
+.fuipchart:not([class*="fill"]):not([class*=dot]):not(text) { fill:none; } 
+
+/* stroke-width classes 
+	0.2 0.5 1 1.5 2 3 4 8 12 16 24 */
+.fuipchart.lwidth0p2 { stroke-width:0.2px; }
+.fuipchart.lwidth0p5 { stroke-width:0.5px; }
+.fuipchart.lwidth1 { stroke-width:1px; }
+.fuipchart.lwidth1p5 { stroke-width:1.5px; }
+.fuipchart.lwidth2 { stroke-width:2px; }
+.fuipchart.lwidth3 { stroke-width:3px; }
+.fuipchart.lwidth4 { stroke-width:4px; }
+.fuipchart.lwidth8 { stroke-width:8px; }
+.fuipchart.lwidth12 { stroke-width:12px; }
+.fuipchart.lwidth16 { stroke-width:16px; }
+.fuipchart.lwidth24 { stroke-width:24px; }
+	
+
+
+
+/* SVG Charts */
+/* Definition of size etc. for the buttons */
+.buttons {
+	fill: var(--fuip-color-symbol-inactive);
+}
+/* Definition for activated texts ('legend' and 'cursor') */
+.caption.active {
+	fill: var(--fuip-color-symbol-active);
+}
+/* Definition for pulldown menus */
+.pulldownmenu {
+	background: var(--fuip-color-symbol-inactive);
+	color: var(--fuip-color-symbol-foreground);
+}
+.pdentry.line {
+	border-bottom-color: #888;
+}
+.pdentry.mouseover {
+	background: var(--fuip-color-symbol-active);
+}
+/* Definition for legend window */
+.legend.lback {
+	fill: var(--fuip-color-symbol-inactive);
+	fill-opacity: 0.7; 
+} 
+/* .legend {
+	stroke: #baabba;
+	font-size: 11px;
+	stroke-width: 0;
+	fill: #aaa;
+	fill-opacity: 0.7;
+}
+.text.legend {
+	fill-opacity: 1;
+} */

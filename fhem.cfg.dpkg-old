@@ -1,0 +1,1799 @@
+attr global backup_before_update 1
+attr global holiday2we NRW
+attr global latitude 50.84880
+attr global logfile ./log/fhem-%Y-%m.log
+attr global longitude 7.22136
+attr global modpath .
+attr global sendStatistics onUpdate
+attr global statefile ./log/fhem.save
+attr global uniqueID ./FHEM/FhemUtils/uniqueID
+attr global updateInBackground 1
+attr global verbose 3
+
+define telnetPort telnet 7072 global
+
+define WEB FHEMWEB 8083 global
+attr WEB JavaScripts codemirror/fhem_codemirror.js
+attr WEB iconPath fhemSVG:openautomation:default:icons_small
+attr WEB plotfork 1
+
+define WEBphone FHEMWEB 8084 global
+attr WEBphone hiddenroom DashboardRoom
+attr WEBphone stylesheetPrefix smallscreen
+
+define WEBtablet FHEMWEB 8085 global
+attr WEBtablet hiddenroom DashboardRoom
+
+# Fake FileLog entry, to access the fhem log from FHEMWEB 
+define Logfile FileLog ./log/fhem-%Y-%m.log fakelog
+
+define autocreate autocreate
+attr autocreate filelog ./log/%NAME-%Y.log
+
+define eventTypes eventTypes ./log/eventTypes.txt
+
+# Disable this to avoid looking for new USB devices on startup
+define initialUsbCheck notify global:INITIALIZED usb create
+define CUL_0 CUL /dev/ttyACM0@9600 1034
+attr CUL_0 rfmode HomeMatic
+
+define fbaha FBAHA fritz.box:2002
+
+define wz_Lampen FBDECT fbaha:16 switch
+attr wz_Lampen userattr GruppeFritzSteckosen GruppeFritzSteckosen_map GruppeSchlafenAus GruppeSchlafenAus_map GruppeVerlassenAus GruppeVerlassenAus_map lightSceneParamsToSave lightSceneRestoreOnlyIfChanged:1,0 strDaemmerungEin strDaemmerungEin_map strGruppenAus strGruppenAus_map structexclude
+attr wz_Lampen GruppeFritzSteckosen AlleFritzSteckdosen
+attr wz_Lampen GruppeVerlassenAus strSzeneVerlassenAus
+attr wz_Lampen IODev fbaha
+attr wz_Lampen Schalter AlleSchalter
+attr wz_Lampen Schalter_map on:an off:aus
+attr wz_Lampen alias Lampen
+attr wz_Lampen event-min-interval power:120
+attr wz_Lampen event-on-change-reading state,power
+attr wz_Lampen eventMap on:an off:aus
+attr wz_Lampen genericDeviceType light
+attr wz_Lampen room FBDECT,Wohnzimmer,alexa
+attr wz_Lampen strDaemmerungEin DaemmerungSchalter
+attr wz_Lampen strDaemmerungEin_map on:an off:aus
+attr wz_Lampen strGruppenAus AlleFritzSteckdosen
+attr wz_Lampen strGruppenAus_map on:an off:aus
+attr wz_Lampen structexclude .*:event-on.*
+attr wz_Lampen webCmd toggle:an:aus
+define FileLog_wz_Lampen FileLog ./log/wz_Lampen-%Y.log wz_Lampen:power\x3a.*
+attr FileLog_wz_Lampen logtype power4:Power,text
+attr FileLog_wz_Lampen room FBDECT
+define SVG_wz_Lampen SVG FileLog_wz_Lampen:power4:CURRENT
+attr SVG_wz_Lampen label "wz_Lampen Min $data{min1}, Max $data{max1}, Last $data{currval1}"
+attr SVG_wz_Lampen room Plots
+
+define wzSofa FBDECT fbaha:17 switch
+attr wzSofa userattr GruppeFritzSteckosen GruppeFritzSteckosen_map GruppeSchlafenAus GruppeSchlafenAus_map GruppeVerlassenAus GruppeVerlassenAus_map lightSceneParamsToSave lightSceneRestoreOnlyIfChanged:1,0 strGruppenAus strGruppenAus_map structexclude
+attr wzSofa GruppeFritzSteckosen AlleFritzSteckdosen
+attr wzSofa GruppeVerlassenAus strSzeneVerlassenAus
+attr wzSofa IODev fbaha
+attr wzSofa Schalter AlleSchalter
+attr wzSofa alias Sofa
+attr wzSofa event-on-change-reading state,power
+attr wzSofa eventMap on:an off:aus
+attr wzSofa room FBDECT,Wohnzimmer
+attr wzSofa strGruppenAus strAlleSchalter
+attr wzSofa strGruppenAus_map on:an off:aus
+attr wzSofa structexclude .*:event-on.*
+define FileLog_wzSofa FileLog ./log/wzSofa-%Y.log wzSofa:power\x3a.*
+attr FileLog_wzSofa logtype power4:Power,text
+attr FileLog_wzSofa room FBDECT
+define SVG_wzSofa SVG FileLog_wzSofa:power4:CURRENT
+attr SVG_wzSofa label "wzSofa Min $data{min1}, Max $data{max1}, Last $data{currval1}"
+attr SVG_wzSofa room Plots
+
+define ke_Warmwasser FBDECT fbaha:18 switch
+attr ke_Warmwasser userattr GruppeFritzSteckosen GruppeFritzSteckosen_map GruppeSchlafenAus GruppeSchlafenAus_map GruppeVerlassenAus GruppeVerlassenAus_map lightSceneParamsToSave lightSceneRestoreOnlyIfChanged:1,0 strGruppenAus strGruppenAus_map structexclude
+attr ke_Warmwasser GruppeFritzSteckosen AlleFritzSteckdosen
+attr ke_Warmwasser GruppeSchlafenAus strSzeneSchlafenAus
+attr ke_Warmwasser GruppeVerlassenAus strSzeneVerlassenAus
+attr ke_Warmwasser IODev fbaha
+attr ke_Warmwasser alias Warmwasser
+attr ke_Warmwasser event-on-change-reading state,power,temperature
+attr ke_Warmwasser eventMap on:an off:aus
+attr ke_Warmwasser room Keller
+attr ke_Warmwasser strGruppenAus AlleFritzSteckdosen
+attr ke_Warmwasser strGruppenAus_map on:an off:aus
+define FileLog_ke_Warmwasser FileLog ./log/ke_Warmwasser-%Y.log ke_Warmwasser:power\x3a.*
+attr FileLog_ke_Warmwasser logtype power4:Power,text
+attr FileLog_ke_Warmwasser room FBDECT
+define SVG_ke_Warmwasser SVG FileLog_ke_Warmwasser:power4:CURRENT
+attr SVG_ke_Warmwasser label "ke_Warmwasser Min $data{min1}, Max $data{max1}, Last $data{currval1}"
+attr SVG_ke_Warmwasser room Plots
+
+define Kueche_Rollade_klein CUL_HM 23XXXXX
+attr Kueche_Rollade_klein userattr Gruppe_EG_Rolladen Gruppe_EG_Rolladen_map Gruppe_Standard_Rolladen Gruppe_Standard_Rolladen_map Rollade_Typ Rollade_Typ_map structexclude
+attr Kueche_Rollade_klein Gruppe_EG_Rolladen EG_Rolladen
+attr Kueche_Rollade_klein Gruppe_Standard_Rolladen Standard_Rolladen
+attr Kueche_Rollade_klein IODev CUL_0
+attr Kueche_Rollade_klein Rollade_Typ Alle_Rolladen
+attr Kueche_Rollade_klein alias Einfahrt
+attr Kueche_Rollade_klein autoReadReg 4_reqStatus
+attr Kueche_Rollade_klein devStateIcon hoch:fts_shutter_10 runter:fts_shutter_100
+attr Kueche_Rollade_klein event-on-change-reading state
+attr Kueche_Rollade_klein eventMap off:runter on:hoch on:off off:on
+attr Kueche_Rollade_klein expert 2_full
+attr Kueche_Rollade_klein firmware 1.7
+attr Kueche_Rollade_klein group Rollos,Kueche
+attr Kueche_Rollade_klein model HM-LC-BL1-FM
+attr Kueche_Rollade_klein peerIDs 00000000,20CF3001,20CF3002,
+attr Kueche_Rollade_klein room Kueche
+attr Kueche_Rollade_klein serialNr KEXXXXXXX
+attr Kueche_Rollade_klein structexclude .*:eventMap
+attr Kueche_Rollade_klein subType blindActuator
+attr Kueche_Rollade_klein webCmd hoch:runter:schatten:lueften
+define FileLog_Kueche_Rollade_klein FileLog ./log/Kueche_Rollade_klein-%Y.log Kueche_Rollade_klein
+attr FileLog_Kueche_Rollade_klein logtype text
+attr FileLog_Kueche_Rollade_klein room CUL_HM
+
+define kuFernbedienung CUL_HM 20CF30
+attr kuFernbedienung IODev CUL_0
+attr kuFernbedienung autoReadReg 4_reqStatus
+attr kuFernbedienung expert 2_full
+attr kuFernbedienung firmware 1.1
+attr kuFernbedienung model HM-PB-6-WM55
+attr kuFernbedienung room CUL_HM
+attr kuFernbedienung serialNr KEXXXXXXX
+attr kuFernbedienung subType remote
+attr kuFernbedienung webCmd getConfig:clear msgEvents
+define FileLog_kuFernbedienung FileLog ./log/kuFernbedienung-%Y.log kuFernbedienung
+attr FileLog_kuFernbedienung logtype text
+attr FileLog_kuFernbedienung room CUL_HM
+
+define CUL_HM_HM_PB_6_WM55_20CF30_Btn_01 CUL_HM 20XXXXX
+attr CUL_HM_HM_PB_6_WM55_20CF30_Btn_01 model HM-PB-6-WM55
+attr CUL_HM_HM_PB_6_WM55_20CF30_Btn_01 peerIDs 00000000,23XXXXX,
+define CUL_HM_HM_PB_6_WM55_20CF30_Btn_02 CUL_HM 20XXXXX
+attr CUL_HM_HM_PB_6_WM55_20CF30_Btn_02 model HM-PB-6-WM55
+attr CUL_HM_HM_PB_6_WM55_20CF30_Btn_02 peerIDs 00000000,23XXXXX,
+define CUL_HM_HM_PB_6_WM55_20CF30_Btn_03 CUL_HM 20XXXXX
+attr CUL_HM_HM_PB_6_WM55_20CF30_Btn_03 model HM-PB-6-WM55
+attr CUL_HM_HM_PB_6_WM55_20CF30_Btn_03 peerIDs 00000000,23XXXXX,
+define CUL_HM_HM_PB_6_WM55_20CF30_Btn_04 CUL_HM 20XXXXX
+attr CUL_HM_HM_PB_6_WM55_20CF30_Btn_04 model HM-PB-6-WM55
+attr CUL_HM_HM_PB_6_WM55_20CF30_Btn_04 peerIDs 00000000,23XXXXX,
+define CUL_HM_HM_PB_6_WM55_20CF30_Btn_05 CUL_HM 20XXXXX
+attr CUL_HM_HM_PB_6_WM55_20CF30_Btn_05 model HM-PB-6-WM55
+attr CUL_HM_HM_PB_6_WM55_20CF30_Btn_05 peerIDs 00000000,27XXXXX,
+define CUL_HM_HM_PB_6_WM55_20CF30_Btn_06 CUL_HM 20XXXXX
+attr CUL_HM_HM_PB_6_WM55_20CF30_Btn_06 model HM-PB-6-WM55
+attr CUL_HM_HM_PB_6_WM55_20CF30_Btn_06 peerIDs 00000000,
+
+define Kueche_Rolladen_gross CUL_HM 20XXXXX
+attr Kueche_Rolladen_gross userattr Gruppe_EG_Rolladen Gruppe_EG_Rolladen_map Gruppe_Standard_Rolladen Gruppe_Standard_Rolladen_map Rollade_Typ Rollade_Typ_map structexclude
+attr Kueche_Rolladen_gross Gruppe_EG_Rolladen EG_Rolladen
+attr Kueche_Rolladen_gross Gruppe_Standard_Rolladen Standard_Rolladen
+attr Kueche_Rolladen_gross IODev CUL_0
+attr Kueche_Rolladen_gross Rollade_Typ Alle_Rolladen
+attr Kueche_Rolladen_gross alias Strasse
+attr Kueche_Rolladen_gross autoReadReg 4_reqStatus
+attr Kueche_Rolladen_gross devStateIcon runter:fts_shutter_100:hoch hoch:fts_shutter_10:runter
+attr Kueche_Rolladen_gross event-on-change-reading state
+attr Kueche_Rolladen_gross eventMap off:runter on:hoch on:off off:on
+attr Kueche_Rolladen_gross expert 2_full
+attr Kueche_Rolladen_gross firmware 1.7
+attr Kueche_Rolladen_gross genericDeviceType switch
+attr Kueche_Rolladen_gross group Kueche,Rollos
+attr Kueche_Rolladen_gross model HM-LC-BL1-FM
+attr Kueche_Rolladen_gross peerIDs 00000000,20XXXXX,20XXXXX,
+attr Kueche_Rolladen_gross room Kueche,alexa
+attr Kueche_Rolladen_gross serialNr KEQXXXXX
+attr Kueche_Rolladen_gross structexclude .*:eventMap
+attr Kueche_Rolladen_gross subType blindActuator
+attr Kueche_Rolladen_gross webCmd hoch:runter:schatten:lueften
+define FileLog_Kueche_Rolladen_gross FileLog ./log/Kueche_Rolladen_gross-%Y.log Kueche_Rolladen_gross
+attr FileLog_Kueche_Rolladen_gross logtype text
+attr FileLog_Kueche_Rolladen_gross room CUL_HM
+
+define kueche_3erDose_1 CUL_HM 20XXXXX
+attr kueche_3erDose_1 userattr GruppeSchlafenAus GruppeSchlafenAus_map GruppeVerlassenAus GruppeVerlassenAus_map strGruppenAus strGruppenAus_map structexclude
+attr kueche_3erDose_1 IODev CUL_0
+attr kueche_3erDose_1 Schalter AlleSchalter
+attr kueche_3erDose_1 Schalter_map on:an off:aus
+attr kueche_3erDose_1 alexaName Lichtsterne
+attr kueche_3erDose_1 alias 3erDose1
+attr kueche_3erDose_1 autoReadReg 4_reqStatus
+attr kueche_3erDose_1 devStateIcon on:message_socket_enabled off:message_socket_disabled
+attr kueche_3erDose_1 event-on-change-reading state
+attr kueche_3erDose_1 eventMap on:an off:aus pauseall:aus
+attr kueche_3erDose_1 expert 2_full
+attr kueche_3erDose_1 firmware 1.12
+attr kueche_3erDose_1 genericDeviceType light
+attr kueche_3erDose_1 icon ge_wht_steckdose
+attr kueche_3erDose_1 model HM-LC-SW1-FM
+attr kueche_3erDose_1 peerIDs 00000000,20XXXXX,
+attr kueche_3erDose_1 room Kueche
+attr kueche_3erDose_1 serialNr LEQXXXXXX
+attr kueche_3erDose_1 strGruppenAus strAlleSchalter
+attr kueche_3erDose_1 strGruppenAus_map on:an off:aus
+attr kueche_3erDose_1 subType switch
+attr kueche_3erDose_1 webCmd toggle:an:aus
+define FileLog_kueche_3erDose_1 FileLog ./log/kueche_3erDose_1-%Y.log kueche_3erDose_1
+attr FileLog_kueche_3erDose_1 Schalter AlleSchalter
+attr FileLog_kueche_3erDose_1 Schalter_map on:an off:aus
+attr FileLog_kueche_3erDose_1 logtype text
+attr FileLog_kueche_3erDose_1 room CUL_HM
+
+define kueche_4erDose_4 CUL_HM 27XXXXX
+attr kueche_4erDose_4 userattr GruppeSchlafenAus GruppeSchlafenAus_map GruppeVerlassenAus GruppeVerlassenAus_map strGruppenAus strGruppenAus_map structexclude
+attr kueche_4erDose_4 IODev CUL_0
+attr kueche_4erDose_4 Schalter AlleSchalter
+attr kueche_4erDose_4 SchalterTyp AlleSchalter
+attr kueche_4erDose_4 Schalter_map on:an off:aus
+attr kueche_4erDose_4 alexaName Lichtsterne
+attr kueche_4erDose_4 alias 4erDose4
+attr kueche_4erDose_4 autoReadReg 4_reqStatus
+attr kueche_4erDose_4 event-on-change-reading state
+attr kueche_4erDose_4 eventMap on:an off:aus pauseall:aus
+attr kueche_4erDose_4 expert 2_full
+attr kueche_4erDose_4 firmware 1.12
+attr kueche_4erDose_4 genericDeviceType light
+attr kueche_4erDose_4 icon ge_wht_steckdose
+attr kueche_4erDose_4 model HM-LC-SW1-FM
+attr kueche_4erDose_4 peerIDs 00000000,20XXXXX,
+attr kueche_4erDose_4 room Kueche
+attr kueche_4erDose_4 serialNr LEQXXXX
+attr kueche_4erDose_4 strGruppenAus strAlleSchalter
+attr kueche_4erDose_4 strGruppenAus_map on:an off:aus
+attr kueche_4erDose_4 subType switch
+attr kueche_4erDose_4 webCmd toggle:an:aus
+
+define kueche_4erDose_1 CUL_HM 20XXXXX
+attr kueche_4erDose_1 userattr GruppeSchlafenAus GruppeSchlafenAus_map GruppeVerlassenAus GruppeVerlassenAus_map strGruppenAus strGruppenAus_map structexclude
+attr kueche_4erDose_1 IODev CUL_0
+attr kueche_4erDose_1 Schalter AlleSchalter
+attr kueche_4erDose_1 SchalterTyp AlleSchalter
+attr kueche_4erDose_1 Schalter_map on:an off:aus
+attr kueche_4erDose_1 alexaName Lichtsterne
+attr kueche_4erDose_1 autoReadReg 4_reqStatus
+attr kueche_4erDose_1 event-on-change-reading state
+attr kueche_4erDose_1 eventMap on:an off:aus pauseall:aus
+attr kueche_4erDose_1 expert 2_full
+attr kueche_4erDose_1 firmware 1.12
+attr kueche_4erDose_1 genericDeviceType light
+attr kueche_4erDose_1 icon ge_wht_steckdose
+attr kueche_4erDose_1 model HM-LC-SW1-FM
+attr kueche_4erDose_1 peerIDs 00000000,20XXXXX,
+attr kueche_4erDose_1 room Kueche
+attr kueche_4erDose_1 serialNr LEQXXXXX
+attr kueche_4erDose_1 strGruppenAus strAlleSchalter
+attr kueche_4erDose_1 strGruppenAus_map on:an off:aus
+attr kueche_4erDose_1 subType switch
+attr kueche_4erDose_1 webCmd toggle:an:aus
+define FileLog_kueche_4erDose_1 FileLog ./log/kueche_4erDose_1-%Y.log kueche_4erDose_1
+attr FileLog_kueche_4erDose_1 Schalter AlleSchalter
+attr FileLog_kueche_4erDose_1 Schalter_map on:an off:aus
+attr FileLog_kueche_4erDose_1 logtype text
+attr FileLog_kueche_4erDose_1 room CUL_HM
+
+define Alle_Rolladen structure Rollade_Typ wzGarage_Rollade EGWC_Rollade wzSchiebetuer_Rollade Kueche_Rolladen_gross Golf_Rollade wzTerrassentuer_Rollade Kueche_Rollade_klein wzEsstisch_Rollade
+attr Alle_Rolladen clientstate_behavior relative
+attr Alle_Rolladen clientstate_priority runter|closed hoch|open schatten lueften
+attr Alle_Rolladen event-on-change-reading state
+attr Alle_Rolladen webCmd hoch:runter:schatten:lueften
+
+define Handy_Juergen PRESENCE lan-ping LG-Juergen
+attr Handy_Juergen absenceThreshold 3
+attr Handy_Juergen event-on-change-reading state
+attr Handy_Juergen ping_count 3
+
+define EG_Flur_Lampe CUL_HM 20XXXXX
+attr EG_Flur_Lampe userattr GruppeVerlassenAus GruppeVerlassenAus_map lightSceneParamsToSave lightSceneRestoreOnlyIfChanged:1,0 strGruppenAus strGruppenAus_map structexclude
+attr EG_Flur_Lampe IODev CUL_0
+attr EG_Flur_Lampe Schalter AlleSchalter
+attr EG_Flur_Lampe Schalter_map on:an off:aus
+attr EG_Flur_Lampe alexaName Flurlicht
+attr EG_Flur_Lampe alias Flur
+attr EG_Flur_Lampe autoReadReg 4_reqStatus
+attr EG_Flur_Lampe event-on-change-reading state
+attr EG_Flur_Lampe eventMap on:an off:aus pauseall:aus
+attr EG_Flur_Lampe expert 2_full
+attr EG_Flur_Lampe firmware 2.2
+attr EG_Flur_Lampe genericDeviceType switch
+attr EG_Flur_Lampe model HM-LC-Sw1PBU-FM
+attr EG_Flur_Lampe peerIDs 00000000,20XXXXX,20XXXXX,
+attr EG_Flur_Lampe room Flur,alexa
+attr EG_Flur_Lampe serialNr KEQXXXXX
+attr EG_Flur_Lampe strGruppenAus strAlleSchalter
+attr EG_Flur_Lampe subType switch
+attr EG_Flur_Lampe webCmd toggle:on:off
+define FileLog_EG_Flur_Lampe FileLog ./log/EG_Flur_Lampe-%Y.log EG_Flur_Lampe
+attr FileLog_EG_Flur_Lampe logtype text
+attr FileLog_EG_Flur_Lampe room CUL_HM
+
+define egflSchalterKueche CUL_HM 20XXXXX
+attr egflSchalterKueche IODev CUL_0
+attr egflSchalterKueche autoReadReg 4_reqStatus
+attr egflSchalterKueche expert 2_full
+attr egflSchalterKueche firmware 1.3
+attr egflSchalterKueche model HM-SWI-3-FM
+attr egflSchalterKueche room CUL_HM
+attr egflSchalterKueche serialNr KEQXXXXX
+attr egflSchalterKueche subType swi
+attr egflSchalterKueche webCmd getConfig:clear msgEvents
+define FileLog_egflSchalterKueche FileLog ./log/egflSchalterKueche-%Y.log egflSchalterKueche
+attr FileLog_egflSchalterKueche logtype text
+attr FileLog_egflSchalterKueche room CUL_HM
+
+define CUL_HM_HM_SWI_3_FM_20XXXXXA_Sw_01 CUL_HM 20XXXXX
+attr CUL_HM_HM_SWI_3_FM_20XXXXXA_Sw_01 model HM-SWI-3-FM
+attr CUL_HM_HM_SWI_3_FM_20XXXXXA_Sw_01 peerIDs 
+define CUL_HM_HM_SWI_3_FM_20XXXXXA_Sw_02 CUL_HM 20XXXXX
+attr CUL_HM_HM_SWI_3_FM_20XXXXXA_Sw_02 model HM-SWI-3-FM
+define CUL_HM_HM_SWI_3_FM_20XXXXXA_Sw_03 CUL_HM 20XXXXX
+attr CUL_HM_HM_SWI_3_FM_20XXXXX_Sw_03 model HM-SWI-3-FM
+define CUL_HM_HM_SWI_3_FM_20XXXXX CUL_HM 20XXXXX
+attr CUL_HM_HM_SWI_3_FM_20XXXXX IODev CUL_0
+attr CUL_HM_HM_SWI_3_FM_20XXXXX alias Schalter_KellerTreppe
+attr CUL_HM_HM_SWI_3_FM_20XXXXX autoReadReg 4_reqStatus
+attr CUL_HM_HM_SWI_3_FM_20XXXXX expert 2_full
+attr CUL_HM_HM_SWI_3_FM_20XXXXX firmware 1.3
+attr CUL_HM_HM_SWI_3_FM_20XXXXX model HM-SWI-3-FM
+attr CUL_HM_HM_SWI_3_FM_20XXXXX room CUL_HM
+attr CUL_HM_HM_SWI_3_FM_20XXXXX serialNr KEQXXXXX
+attr CUL_HM_HM_SWI_3_FM_20XXXXX subType swi
+attr CUL_HM_HM_SWI_3_FM_20XXXXX webCmd getConfig:clear msgEvents
+define FileLog_CUL_HM_HM_SWI_3_FM_20XXXXX FileLog ./log/CUL_HM_HM_SWI_3_FM_253191-%Y.log CUL_HM_HM_SWI_3_FM_20XXXXX
+attr FileLog_CUL_HM_HM_SWI_3_FM_20XXXXX logtype text
+attr FileLog_CUL_HM_HM_SWI_3_FM_20XXXXX room CUL_HM
+define CUL_HM_HM_SWI_3_FM_20XXXXX_Sw_01 CUL_HM 20XXXXX
+attr CUL_HM_HM_SWI_3_FM_20XXXXX_Sw_01 model HM-SWI-3-FM
+attr CUL_HM_HM_SWI_3_FM_20XXXXX_Sw_01 peerIDs 00000000,
+define CUL_HM_HM_SWI_3_FM_20XXXXX_Sw_02 CUL_HM 20XXXXX
+attr CUL_HM_HM_SWI_3_FM_20XXXXX_Sw_02 model HM-SWI-3-FM
+attr CUL_HM_HM_SWI_3_FM_20XXXXX_Sw_02 peerIDs 
+define CUL_HM_HM_SWI_3_FM_20XXXXX_Sw_03 CUL_HM 20XXXXX
+attr CUL_HM_HM_SWI_3_FM_20XXXXX_Sw_03 model HM-SWI-3-FM
+
+define Handy_Anke PRESENCE lan-ping Anke-Sony 60 90
+attr Handy_Anke absenceThreshold 3
+attr Handy_Anke event-on-change-reading state
+attr Handy_Anke ping_count 3
+
+define TL Twilight 50.84880 7.22136 1 672500
+attr TL event-on-change-reading twilight,twilight_weather,state,light
+
+define gr_Bewohner RESIDENTS
+attr gr_Bewohner alias Residents
+attr gr_Bewohner devStateIcon .*home:status_available:absent .*absent:status_away_1:home .*gone:status_standby:home .*none:control_building_empty .*gotosleep:status_night:asleep .*asleep:status_night:awoken .*awoken:status_available:home
+attr gr_Bewohner event-on-change-reading state
+attr gr_Bewohner icon control_building_filled
+attr gr_Bewohner room Residents,Wohnzimmer
+attr gr_Bewohner webCmd state
+
+define rr_Anke ROOMMATE gr_Bewohner
+attr rr_Anke alias Anke
+attr rr_Anke devStateIcon .*home:user_available:absent .*absent:user_away:home .*gone:user_ext_away:home .*gotosleep:scene_toilet:asleep .*asleep:scene_sleeping:awoken .*awoken:scene_sleeping_alternat:home .*:user_unknown
+attr rr_Anke event-on-change-reading state,location
+attr rr_Anke icon people_sensor
+attr rr_Anke room Residents
+attr rr_Anke rr_locationHome Zuhause home
+attr rr_Anke sortby 0
+attr rr_Anke webCmd state:mood
+
+define rr_Juergen ROOMMATE gr_Bewohner
+attr rr_Juergen alias Jürgen
+attr rr_Juergen devStateIcon .*home:user_available:absent .*absent:user_away:home .*gone:user_ext_away:home .*gotosleep:scene_toilet:asleep .*asleep:scene_sleeping:awoken .*awoken:scene_sleeping_alternat:home .*:user_unknown
+attr rr_Juergen event-on-change-reading state,location
+attr rr_Juergen icon people_sensor
+attr rr_Juergen room Residents
+attr rr_Juergen rr_locationHome Zuhause home
+attr rr_Juergen rr_locationWayhome BueroMT
+attr rr_Juergen sortby 0
+attr rr_Juergen webCmd state:mood
+
+define zuHause_Anke notify rr_Anke:home set wz_MultiMedia on;; {if(ReadingsVal("rr_Juergen","state","absent") eq "home") {fhem("set Sonos_Buero Speak 30 de Anke kommt gerade nach Hause")} else {fhem("set pushmsgJ msg 'Anke ist zu Hause'")}}
+
+define Handy_Aus notify (Handy_Anke:absent|Handy_Juergen:absent) {my $Dev = substr("$NAME",6);; if ((sprintf("%02d:%02d", $hour, $min) gt "21:00" or sprintf("%02d:%02d", $hour, $min) lt "04:00") and ReadingsVal("rg_wz_MultiMedia","state","asleep") ne "home") { fhem("set rr_".$Dev." asleep")} else {if(ReadingsVal("rr_".$Dev,"location","Zuhause") ne "Zuhause") {fhem("set rr_".$Dev." absent")}}}
+
+define rg_wz_MultiMedia GUEST gr_Bewohner
+attr rg_wz_MultiMedia alias MultiMedia
+attr rg_wz_MultiMedia devStateIcon .*home:user_available:absent .*absent:user_away:home .*none:control_building_empty:home .*gotosleep:scene_toilet:asleep .*asleep:scene_sleeping:awoken .*awoken:scene_sleeping_alternat:home .*:user_unknown
+attr rg_wz_MultiMedia event-on-change-reading state
+attr rg_wz_MultiMedia icon scene_visit_guests
+attr rg_wz_MultiMedia rg_autoGoneAfter 24
+attr rg_wz_MultiMedia rg_realname group
+attr rg_wz_MultiMedia room Residents
+attr rg_wz_MultiMedia sortby 1
+attr rg_wz_MultiMedia webCmd state:mood
+
+define WEBhook FHEMWEB 8088 global
+attr WEBhook HTTPS 1
+attr WEBhook hiddenroom input,detail,save,Unsorted,Everything,CUL_HM,Commandref,style,Edit files,Select style,Logfile,Floorplans,Remote doc,FileLogs, Bad, Buero, Flur, Keller, Kueche, Residents, Sonos, Wohnzimmer,DashboardRoom
+attr WEBhook webname webhook
+
+define Heimweg_Juergen notify rr_Juergen:underway if (ReadingsVal("rr_Juergen", "wayhome", 0) == 1) { fhem("set pushmsgJ msg 'Jürgen ist auf dem Weg nach Hause' ") }
+
+define Wetter Weather 672500 600 de
+define pushmsgJ Pushover aUXXXXX gS2XXXXXXXXXXXXX
+attr pushmsgJ title Nachricht von FHEM:
+
+define Kalender_Geburtstage Calendar ical url https://www.google.com/calendar/ical/XXXXXXXXXXXjs%40group.calendar.google.com/private-XXXXXXXXXX/basic.ics 14400
+attr Kalender_Geburtstage hideOlderThan 2d
+
+define Handy_An notify (Handy_Anke:present|Handy_Juergen:present) {my $Dev = substr("$NAME",6);; if (ReadingsVal("rr_".$Dev."", "state", "absent") ne "home") { fhem("set rr_".$Dev." home")}}
+
+define pushmsgA Pushover aUXXXXX geXXXXXXX
+attr pushmsgA title Nachricht von FHEM:
+
+define duUrlaub dummy
+attr duUrlaub eventMap ja:on nein:off
+attr duUrlaub setList ja nein
+
+define Anke_Sync notify rr_Juergen:(home|asleep|absent) { fhem("set rr_Anke $EVENT") if( $we && (ReadingsVal("Handy_Anke","state", "present") eq "absent" ) && (ReadingsVal("rr_Anke","state","home") ne "asleep"))}
+attr Anke_Sync comment Am Wochenende hat Anke ihr Handy nicht immer an. Daher wird es mit meinem synchronisiert
+
+define vKalender_Geburtstage CALVIEW Kalender_Geburtstage 1
+attr vKalender_Geburtstage maxreadings 4
+attr vKalender_Geburtstage modes modeAlarm,modeStart,modeStarted,modeUpcoming
+define KuechenSteckdosen structure strGruppenAus kueche_4erDose_1 kueche_4erDose_4 kueche_3erDose_1
+attr KuechenSteckdosen userattr GruppeSchlafenAus GruppeSchlafenAus_map GruppeVerlassenAus GruppeVerlassenAus_map strGruppenAus strGruppenAus_map structexclude
+attr KuechenSteckdosen alexaName Lichtsterne
+attr KuechenSteckdosen alias Küche-Licht
+attr KuechenSteckdosen clientstate_behavior relative
+attr KuechenSteckdosen clientstate_priority on|an off|aus
+attr KuechenSteckdosen event-on-change-reading state
+attr KuechenSteckdosen eventMap on:an off:aus pauseall:aus
+attr KuechenSteckdosen genericDeviceType light
+attr KuechenSteckdosen room Kueche,alexa
+attr KuechenSteckdosen strGruppenAus strAlleSchalter
+attr KuechenSteckdosen strGruppenAus_map on:an off:aus
+
+define szTV FBDECT fbaha:19 switch
+attr szTV userattr GruppeFritzSteckosen GruppeFritzSteckosen_map GruppeSchlafenAus GruppeSchlafenAus_map GruppeVerlassenAus GruppeVerlassenAus_map lightSceneParamsToSave lightSceneRestoreOnlyIfChanged:1,0 strGruppenAus strGruppenAus_map structexclude
+attr szTV GruppeFritzSteckosen AlleFritzSteckdosen
+attr szTV GruppeSchlafenAus strSzeneSchlafenAus
+attr szTV GruppeVerlassenAus strSzeneVerlassenAus
+attr szTV IODev fbaha
+attr szTV alias TV Schlafzimmer
+attr szTV event-on-change-reading state,power:5
+attr szTV eventMap on:an off:aus
+attr szTV room Schlafzimmer,FBDECT
+attr szTV strGruppenAus AlleFritzSteckdosen
+attr szTV strGruppenAus_map on:an off:aus
+attr szTV webCmd toggle:on:off
+define FileLog_szTV FileLog ./log/szTV-%Y.log szTV:power\x3a.*
+attr FileLog_szTV logtype power4:Power,text
+attr FileLog_szTV room FBDECT
+define SVG_szTV SVG FileLog_szTV:power4:CURRENT
+attr SVG_szTV label "szTV Min $data{min1}, Max $data{max1}, Last $data{currval1}"
+attr SVG_szTV room Plots
+
+define Sonos_BadRG readingsGroup Sonos_Bad:<{SONOS_getCoverTitleRG($DEVICE)}@infoSummarize2>
+attr Sonos_BadRG commands {'state' => 'state:'}
+attr Sonos_BadRG group Bad
+attr Sonos_BadRG noheading 1
+attr Sonos_BadRG nonames 1
+attr Sonos_BadRG room Sonos
+attr Sonos_BadRG sortby 2
+define Sonos_BadRG_Favourites readingsGroup Sonos_Bad:<{SONOS_getListRG($DEVICE,"Favourites",1)}@Favourites>
+define Sonos_BadRG_Radios readingsGroup Sonos_Bad:<{SONOS_getListRG($DEVICE,"Radios",1)}@Radios>
+define Sonos_BadRG_Playlists readingsGroup Sonos_Bad:<{SONOS_getListRG($DEVICE,"Playlists")}@Playlists>
+define Sonos_BadRC remotecontrol
+attr Sonos_BadRC group Sonos
+attr Sonos_BadRC rc_iconpath icons/remotecontrol
+attr Sonos_BadRC rc_iconprefix black_btn_
+attr Sonos_BadRC room hidden
+attr Sonos_BadRC row00 Play:rc_PLAY.svg,Pause:rc_PAUSE.svg,Previous:rc_PREVIOUS.svg,Next:rc_NEXT.svg,:blank,VolumeD:rc_VOLDOWN.svg,VolumeU:rc_VOLUP.svg,:blank,MuteT:rc_MUTE.svg,ShuffleT:rc_SHUFFLE.svg,RepeatT:rc_REPEAT.svg
+define Sonos_BadRC_Notify notify Sonos_BadRC set Sonos_Bad $EVENT
+define Sonos_BadRC_Weblink weblink htmlCode {fhem("get Sonos_BadRC htmlcode", 1)}
+attr Sonos_BadRC_Weblink group Bad
+attr Sonos_BadRC_Weblink room Sonos
+attr Sonos_BadRC_Weblink sortby 3
+
+define Sonos_BueroRG readingsGroup Sonos_Buero:<{SONOS_getCoverTitleRG($DEVICE)}@infoSummarize2>
+attr Sonos_BueroRG group Buero
+attr Sonos_BueroRG noheading 1
+attr Sonos_BueroRG nonames 1
+attr Sonos_BueroRG room Sonos
+attr Sonos_BueroRG sortby 2
+define Sonos_BueroRG_Favourites readingsGroup Sonos_Buero:<{SONOS_getListRG($DEVICE,"Favourites",1)}@Favourites>
+define Sonos_BueroRG_Radios readingsGroup Sonos_Buero:<{SONOS_getListRG($DEVICE,"Radios",1)}@Radios>
+define Sonos_BueroRG_Playlists readingsGroup Sonos_Buero:<{SONOS_getListRG($DEVICE,"Playlists")}@Playlists>
+define Sonos_BueroRC remotecontrol
+attr Sonos_BueroRC group Sonos
+attr Sonos_BueroRC rc_iconpath icons/remotecontrol
+attr Sonos_BueroRC rc_iconprefix black_btn_
+attr Sonos_BueroRC room hidden
+attr Sonos_BueroRC row00 Play:rc_PLAY.svg,Pause:rc_PAUSE.svg,Previous:rc_PREVIOUS.svg,Next:rc_NEXT.svg,:blank,VolumeD:rc_VOLDOWN.svg,VolumeU:rc_VOLUP.svg,:blank,MuteT:rc_MUTE.svg,ShuffleT:rc_SHUFFLE.svg,RepeatT:rc_REPEAT.svg
+define Sonos_BueroRC_Notify notify Sonos_BueroRC set Sonos_Buero $EVENT
+define Sonos_BueroRC_Weblink weblink htmlCode {fhem("get Sonos_BueroRC htmlcode", 1)}
+attr Sonos_BueroRC_Weblink group Buero
+attr Sonos_BueroRC_Weblink room Sonos
+attr Sonos_BueroRC_Weblink sortby 3
+
+define Sonos_KuecheRG readingsGroup Sonos_Kueche:<{SONOS_getCoverTitleRG($DEVICE)}@infoSummarize2>
+attr Sonos_KuecheRG group Kueche
+attr Sonos_KuecheRG noheading 1
+attr Sonos_KuecheRG nonames 1
+attr Sonos_KuecheRG room Sonos
+attr Sonos_KuecheRG sortby 2
+define Sonos_KuecheRG_Favourites readingsGroup Sonos_Kueche:<{SONOS_getListRG($DEVICE,"Favourites",1)}@Favourites>
+define Sonos_KuecheRG_Radios readingsGroup Sonos_Kueche:<{SONOS_getListRG($DEVICE,"Radios",1)}@Radios>
+define Sonos_KuecheRG_Playlists readingsGroup Sonos_Kueche:<{SONOS_getListRG($DEVICE,"Playlists")}@Playlists>
+define Sonos_KuecheRC remotecontrol
+attr Sonos_KuecheRC group Sonos
+attr Sonos_KuecheRC rc_iconpath icons/remotecontrol
+attr Sonos_KuecheRC rc_iconprefix black_btn_
+attr Sonos_KuecheRC room hidden
+attr Sonos_KuecheRC row00 Play:rc_PLAY.svg,Pause:rc_PAUSE.svg,Previous:rc_PREVIOUS.svg,Next:rc_NEXT.svg,:blank,VolumeD:rc_VOLDOWN.svg,VolumeU:rc_VOLUP.svg,:blank,MuteT:rc_MUTE.svg,ShuffleT:rc_SHUFFLE.svg,RepeatT:rc_REPEAT.svg
+define Sonos_KuecheRC_Notify notify Sonos_KuecheRC set Sonos_Kueche $EVENT
+define Sonos_KuecheRC_Weblink weblink htmlCode {fhem("get Sonos_KuecheRC htmlcode", 1)}
+attr Sonos_KuecheRC_Weblink group Kueche
+attr Sonos_KuecheRC_Weblink room Sonos
+attr Sonos_KuecheRC_Weblink sortby 3
+
+define Sonos_WohnzimmerRG readingsGroup Sonos_Wohnzimmer:<{SONOS_getCoverTitleRG($DEVICE)}@infoSummarize2>
+attr Sonos_WohnzimmerRG group Wohnzimmer
+attr Sonos_WohnzimmerRG noheading 1
+attr Sonos_WohnzimmerRG nonames 1
+attr Sonos_WohnzimmerRG room Sonos
+attr Sonos_WohnzimmerRG sortby 2
+define Sonos_WohnzimmerRG_Favourites readingsGroup Sonos_Wohnzimmer:<{SONOS_getListRG($DEVICE,"Favourites",0)}@Favourites>
+define Sonos_WohnzimmerRG_Radios readingsGroup Sonos_Wohnzimmer:<{SONOS_getListRG($DEVICE,"Radios",1)}@Radios>
+define Sonos_WohnzimmerRG_Playlists readingsGroup Sonos_Wohnzimmer:<{SONOS_getListRG($DEVICE,"Playlists")}@Playlists>
+define Sonos_WohnzimmerRC remotecontrol
+attr Sonos_WohnzimmerRC group Sonos
+attr Sonos_WohnzimmerRC rc_iconpath icons/remotecontrol
+attr Sonos_WohnzimmerRC rc_iconprefix black_btn_
+attr Sonos_WohnzimmerRC room hidden
+attr Sonos_WohnzimmerRC row00 Play:rc_PLAY.svg,Pause:rc_PAUSE.svg,Previous:rc_PREVIOUS.svg,Next:rc_NEXT.svg,:blank,VolumeD:rc_VOLDOWN.svg,VolumeU:rc_VOLUP.svg,:blank,MuteT:rc_MUTE.svg,ShuffleT:rc_SHUFFLE.svg,RepeatT:rc_REPEAT.svg
+define Sonos_WohnzimmerRC_Notify notify Sonos_WohnzimmerRC set Sonos_Wohnzimmer $EVENT
+define Sonos_WohnzimmerRC_Weblink weblink htmlCode {fhem("get Sonos_WohnzimmerRC htmlcode", 1)}
+attr Sonos_WohnzimmerRC_Weblink group Wohnzimmer
+attr Sonos_WohnzimmerRC_Weblink room Sonos
+attr Sonos_WohnzimmerRC_Weblink sortby 3
+
+define AlleFritzSteckdosen structure GruppeFritzSteckosen TYPE=FBDECT
+attr AlleFritzSteckdosen userattr GruppeVerlassenAus GruppeVerlassenAus_map strGruppenAus strGruppenAus_map structexclude
+attr AlleFritzSteckdosen GruppeVerlassenAus_map on:an off:aus
+attr AlleFritzSteckdosen async_delay 1
+attr AlleFritzSteckdosen clientstate_behavior relative
+attr AlleFritzSteckdosen clientstate_priority an|on aus|off
+attr AlleFritzSteckdosen event-on-change-reading state
+attr AlleFritzSteckdosen eventMap on:an off:aus pauseall:aus
+attr AlleFritzSteckdosen strGruppenAus strAlleSchalter
+attr AlleFritzSteckdosen strGruppenAus_map on:an off:aus
+
+define strAlleSchalter structure strGruppenAus AlleFritzSteckdosen KuechenSteckdosen EG_Flur_Lampe wzLED_C1 HUEDevice3
+attr strAlleSchalter userattr GruppeVerlassenAus GruppeVerlassenAus_map lightSceneParamsToSave lightSceneRestoreOnlyIfChanged:1,0 strGruppenAus strGruppenAus_map structexclude
+attr strAlleSchalter clientstate_behavior relative
+attr strAlleSchalter clientstate_priority an|on aus|off
+attr strAlleSchalter event-on-change-reading state
+attr strAlleSchalter eventMap on:an off:aus pauseall:aus
+
+define Mundorf_BurgSuelz HTTPMOD http://www.clever-tanken.de/tankstelle_details/12109 3720
+attr Mundorf_BurgSuelz userattr reading01Name reading01Regex stateFormat timeout
+attr Mundorf_BurgSuelz enableControlSet 1
+attr Mundorf_BurgSuelz reading01Name Diesel
+attr Mundorf_BurgSuelz reading01Regex (?s)SpritsortenController.*([0-9],[0-9]+).*<span>Diesel<.span>
+attr Mundorf_BurgSuelz stateFormat Liter_Diesel:Diesel
+attr Mundorf_BurgSuelz timeout 5
+
+define bft HTTPMOD http://www.clever-tanken.de/tankstelle_details/53145 3680
+attr bft userattr reading01Expr reading01Name reading01Regex stateFormat timeout
+attr bft enableControlSet 1
+attr bft reading01Name Diesel
+attr bft reading01Regex (?s)SpritsortenController.*([0-9],[0-9]+).*<span>Diesel<.span>
+attr bft stateFormat Liter_Diesel:Diesel
+attr bft timeout 5
+
+define Agip HTTPMOD http://www.clever-tanken.de/tankstelle_details/2516 3600
+attr Agip userattr reading01Name reading01Regex stateFormat timeout
+attr Agip enableControlSet 1
+attr Agip reading01Name Diesel
+attr Agip reading01Regex (?s)SpritsortenController.*([0-9],[0-9]+).*<span>Diesel<.span>
+attr Agip stateFormat Liter_Diesel:Diesel
+attr Agip timeout 5
+
+define Esso HTTPMOD http://www.clever-tanken.de/tankstelle_details/5017 3660
+attr Esso userattr reading01Name reading01Regex stateFormat timeout
+attr Esso enableControlSet 1
+attr Esso reading01Name Diesel
+attr Esso reading01Regex (?s)SpritsortenController.*([0-9],[0-9]+).*<span>Diesel<.span>
+attr Esso stateFormat Liter_Diesel:Diesel
+attr Esso timeout 5
+define FahrtNachRatingen HTTPMOD https://maps.googleapis.com/maps/api/distancematrix/json?origins=Lohmar,Am+Kop+88&destinations=Ratingen,balcke-duerr-allee+9&mode=driving&language=de-DE&departure_time=now&key=XXXXXXXXXXXXXXXXYJv9mo 3600
+attr FahrtNachRatingen userattr reading01Name reading01OExpr reading01Regex reading02Name reading02OExpr reading02Regex reading03Name reading03OExpr reading03Regex stateFormat timeout
+attr FahrtNachRatingen alias nach Ratingen
+attr FahrtNachRatingen enableControlSet 1
+attr FahrtNachRatingen reading01Name Standard
+attr FahrtNachRatingen reading01OExpr GoogleExpr($val,0)
+attr FahrtNachRatingen reading01Regex (?s)duration.* "(.* Minuten).*duration_in
+attr FahrtNachRatingen reading02Name Verkehr
+attr FahrtNachRatingen reading02OExpr GoogleExpr($val, 0)
+attr FahrtNachRatingen reading02Regex (?s)duration_in.*"(.* Minuten)
+attr FahrtNachRatingen reading03Name VerkehrInMinuten
+attr FahrtNachRatingen reading03OExpr GoogleExpr($val,1)
+attr FahrtNachRatingen reading03Regex (?s)duration_in.*"(.* Minuten)
+attr FahrtNachRatingen stateFormat Normal:Standard Aktuell:Verkehr
+attr FahrtNachRatingen timeout 5
+
+define FahrtNachFrankfurt HTTPMOD https://maps.googleapis.com/maps/api/distancematrix/json?origins=Lohmar,Am+Kop+88&destinations=Frankfurt,Solmsstrasse+10&mode=driving&language=de-DE&departure_time=now&key=XXXXXXXXXXXXXXXXYJv9momo 3600
+attr FahrtNachFrankfurt userattr reading01Name reading01OExpr reading01Regex reading02Name reading02OExpr reading02Regex stateFormat timeout
+attr FahrtNachFrankfurt alias nach Frankfurt
+attr FahrtNachFrankfurt enableControlSet 1
+attr FahrtNachFrankfurt reading01Name Standard
+attr FahrtNachFrankfurt reading01OExpr GoogleExpr($val, 0)
+attr FahrtNachFrankfurt reading01Regex (?s)duration.* "(.* Minuten).*duration_in
+attr FahrtNachFrankfurt reading02Name Verkehr
+attr FahrtNachFrankfurt reading02OExpr GoogleExpr($val, 0)
+attr FahrtNachFrankfurt reading02Regex (?s)duration_in.*"(.* Minuten)
+attr FahrtNachFrankfurt stateFormat Normal:Standard Aktuell:Verkehr
+attr FahrtNachFrankfurt timeout 5
+
+define FahrtNachBonn HTTPMOD https://maps.googleapis.com/maps/api/distancematrix/json?origins=Lohmar,Am+Kop+88&destinations=Bonn,vorgebirgsstrasse+43&mode=driving&language=de-DE&departure_time=now&key=XXXXXXXXXXXXXXXXYJv9mo9mo 3600
+attr FahrtNachBonn userattr reading01Name reading01OExpr reading01Regex reading02Name reading02OExpr reading02Regex reading03Name reading03OExpr reading03Regex stateFormat timeout
+attr FahrtNachBonn alias nach Bonn
+attr FahrtNachBonn enableControlSet 1
+attr FahrtNachBonn reading01Name Standard
+attr FahrtNachBonn reading01OExpr GoogleExpr($val, 0)
+attr FahrtNachBonn reading01Regex (?s)duration.* "(.* Minuten).*duration_in
+attr FahrtNachBonn reading02Name Verkehr
+attr FahrtNachBonn reading02OExpr GoogleExpr($val, 0)
+attr FahrtNachBonn reading02Regex (?s)duration_in.*"(.* Minuten)
+attr FahrtNachBonn reading03Name VerkehrInMinuten
+attr FahrtNachBonn reading03OExpr GoogleExpr($val,1)
+attr FahrtNachBonn reading03Regex (?s)duration_in.*"(.* Minuten)
+attr FahrtNachBonn stateFormat Normal:Standard Aktuell:Verkehr
+attr FahrtNachBonn timeout 5
+
+define MuellterminDummy dummy
+
+define notAbfalltermine notify Abfall:triggered { Abfalltermine() }
+
+define Abfall Calendar ical url https://calendar.google.com/calendar/ical/XXXXXXXXXXXXXXXXXXXXXXXX0%40group.calendar.google.com/private-XXXXXXXXXXXXXXXXXXXb/basic.ics 21600
+attr Abfall hideOlderThan 10
+
+define vAbfall CALVIEW Abfall 1
+attr vAbfall maxreadings 5
+attr vAbfall modes next
+attr vAbfall oldStyledReadings 1
+
+define Pollenflug HTTPMOD http://www.wetteronline.de/pollen/lohmar 3600
+attr Pollenflug userattr reading01Name reading01RegOpt reading01Regex reading02Name reading02RegOpt reading02Regex reading03Name reading03RegOpt reading03Regex reading04Name reading04RegOpt reading04Regex reading05Name reading05RegOpt reading05Regex requestHeader1 timeout
+attr Pollenflug enableControlSet 1
+attr Pollenflug reading01Name Erle
+attr Pollenflug reading01RegOpt s
+attr Pollenflug reading01Regex Erle.*burden">....(\w+)[\r\n].*Has"
+attr Pollenflug reading02Name Hasel
+attr Pollenflug reading02RegOpt s
+attr Pollenflug reading02Regex Hasel.*burden">[\r\n]...(\w+)[\r\n].*Pap"
+attr Pollenflug reading03Name Birke
+attr Pollenflug reading03RegOpt s
+attr Pollenflug reading03Regex Birke.*burden">[\r\n]...(\w+)[\r\n].*Buc"
+attr Pollenflug reading04Name Graeser
+attr Pollenflug reading04RegOpt s
+attr Pollenflug reading04Regex Gräser.*burden">[\r\n]...(\w+)[\r\n].*Eic"
+attr Pollenflug reading05Name Ambrosia
+attr Pollenflug reading05RegOpt s
+attr Pollenflug reading05Regex Ambrosia.*burden">[\r\n]...(\w+)
+attr Pollenflug requestHeader1 User-Agent: Mozilla/5.0 (Windows NT 6.0)
+attr Pollenflug timeout 5
+
+define keSport FBDECT fbaha:20001 switch
+attr keSport userattr GruppeFritzSteckosen GruppeFritzSteckosen_map GruppeSchlafenAus GruppeSchlafenAus_map GruppeVerlassenAus GruppeVerlassenAus_map strGruppenAus strGruppenAus_map structexclude
+attr keSport GruppeFritzSteckosen AlleFritzSteckdosen
+attr keSport GruppeVerlassenAus strSzeneVerlassenAus
+attr keSport IODev fbaha
+attr keSport alias Sport
+attr keSport event-on-change-reading state,power
+attr keSport eventMap off:aus on:an set_off:aus set_on:an
+attr keSport room FBDECT,Keller
+attr keSport strGruppenAus AlleFritzSteckdosen
+attr keSport structexclude .*:event-on.*
+define FileLog_keSport FileLog ./log/keSport-%Y.log keSport:power\x3a.*
+attr FileLog_keSport logtype power4:Power,text
+attr FileLog_keSport room FBDECT
+define SVG_keSport SVG FileLog_keSport:power4:CURRENT
+attr SVG_keSport label "keSport Min $data{min1}, Max $data{max1}, Last $data{currval1}"
+attr SVG_keSport room Plots
+
+define wz_MultiMedia FBDECT fbaha:20000 switch
+attr wz_MultiMedia userattr GruppeFritzSteckosen GruppeFritzSteckosen_map lightSceneParamsToSave lightSceneRestoreOnlyIfChanged:1,0 strGruppenAus strGruppenAus_map structexclude
+attr wz_MultiMedia GruppeFritzSteckosen AlleFritzSteckdosen
+attr wz_MultiMedia IODev fbaha
+attr wz_MultiMedia alias MultiMedia
+attr wz_MultiMedia event-on-change-reading state,power:10
+attr wz_MultiMedia eventMap off:aus on:an set_off:aus set_on:an
+attr wz_MultiMedia group Wohnzimmer
+attr wz_MultiMedia room FBDECT,Wohnzimmer
+define FileLog_wz_MultiMedia FileLog ./log/wz_MultiMedia-%Y.log wz_MultiMedia:power\x3a.*
+attr FileLog_wz_MultiMedia logtype power4:Power,text
+attr FileLog_wz_MultiMedia room FBDECT
+define SVG_wz_MultiMedia SVG FileLog_wz_MultiMedia:power4:CURRENT
+attr SVG_wz_MultiMedia label "wz_MultiMedia Min $data{min1}, Max $data{max1}, Last $data{currval1}"
+attr SVG_wz_MultiMedia room Plots
+
+define wzMultiMediaAktion notify WohnzimmerHub:activity:.* {MultiMediaAktion($EVTPART1,$hour,$min)}
+
+define wzLED_Dimmer CUL_HM 20XXXXX
+attr wzLED_Dimmer IODev CUL_0
+attr wzLED_Dimmer autoReadReg 4_reqStatus
+attr wzLED_Dimmer expert 2_full
+attr wzLED_Dimmer firmware 2.7
+attr wzLED_Dimmer model HM-LC-Dim1PWM-CV
+attr wzLED_Dimmer room CUL_HM
+attr wzLED_Dimmer serialNr LEQXXXXXXX
+attr wzLED_Dimmer subType dimmer
+attr wzLED_Dimmer webCmd getConfig:clear msgEvents
+
+define FileLog_wzLED_Dimmer FileLog ./log/wzLED_Dimmer-%Y.log wzLED_Dimmer
+attr FileLog_wzLED_Dimmer logtype text
+attr FileLog_wzLED_Dimmer room CUL_HM
+define wzLED_C1 CUL_HM 20XXXXX
+attr wzLED_C1 userattr GruppeVerlassenAus GruppeVerlassenAus_map lightSceneParamsToSave lightSceneRestoreOnlyIfChanged:1,0 strDaemmerungEin strDaemmerungEin_map strGruppenAus strGruppenAus_map structexclude
+attr wzLED_C1 GruppeVerlassenAus_map 50:an set_50:an on:an off:aus set_off:aus
+attr wzLED_C1 alexaName Deckenlicht
+attr wzLED_C1 event-on-change-reading state
+attr wzLED_C1 eventMap on:an off:aus pauseall:aus
+attr wzLED_C1 genericDeviceType switch
+attr wzLED_C1 model HM-LC-Dim1PWM-CV
+attr wzLED_C1 peerIDs 00000000,
+attr wzLED_C1 room Wohnzimmer,alexa
+attr wzLED_C1 strDaemmerungEin DaemmerungSchalter
+attr wzLED_C1 strDaemmerungEin_map 50:an set_50:an on:an off:aus set_off:aus
+attr wzLED_C1 strGruppenAus strAlleSchalter
+attr wzLED_C1 strGruppenAus_map 50:an set_50:an on:an off:aus set_off:aus
+attr wzLED_C1 webCmd pct:toggle:on:off:up:down
+define CUL_HM_HM_LC_Dim1PWM_CV_XXXXXX_Sw1_V_01 CUL_HM 20XXXXX
+attr CUL_HM_HM_LC_Dim1PWM_CV_XXXXXX_Sw1_V_01 model HM-LC-Dim1PWM-CV
+attr CUL_HM_HM_LC_Dim1PWM_CV_XXXXXX_Sw1_V_01 peerIDs 00000000,
+attr CUL_HM_HM_LC_Dim1PWM_CV_XXXXXX_Sw1_V_01 webCmd statusRequest:toggle:on:off:up:down
+define CUL_HM_HM_LC_Dim1PWM_CV_XXXXXX_Sw1_V_02 CUL_HM 20XXXXX
+attr CUL_HM_HM_LC_Dim1PWM_CV_XXXXXX_Sw1_V_02 model HM-LC-Dim1PWM-CV
+attr CUL_HM_HM_LC_Dim1PWM_CV_XXXXXX_Sw1_V_02 peerIDs 00000000,
+attr CUL_HM_HM_LC_Dim1PWM_CV_XXXXXX_Sw1_V_02 webCmd statusRequest:toggle:on:off:up:down
+
+define Kalender_Juergen Calendar ical url https://www.google.com/calendar/ical/XXXXXXXX%40gmail.com/private-XXXXXXXXXXXXXXXXXXX/basic.ics 14400
+attr Kalender_Juergen hideOlderThan 2d
+define vKalender_Juergen CALVIEW Kalender_Juergen 1 21200
+attr vKalender_Juergen maxreadings 5
+attr vKalender_Juergen modes modeAlarm,modeStart,modeStarted,modeUpcoming
+
+define DaemmerungSchalter structure strDaemmerungEin wz_Lampen wzLED_C1 HUEDevice3
+attr DaemmerungSchalter clientstate_behavior relative
+attr DaemmerungSchalter clientstate_priority an|on aus|off
+attr DaemmerungSchalter event-on-change-reading state
+
+define Kalender_Anke Calendar ical url https://www.google.com/calendar/ical/XXXXXXXh%40gmail.com/private-e77fb6facb0102b7c1668ea2544e1104/basic.ics 14400
+attr Kalender_Anke hideOlderThan 2d
+define vKalender_Anke CALVIEW Kalender_Anke 1 21600
+attr vKalender_Anke maxreadings 5
+attr vKalender_Anke modes modeAlarm,modeStart,modeStarted,modeUpcoming
+define FileLog_FBDECT_3072 FileLog ./log/FBDECT_3072-%Y.log FBDECT_3072:power\x3a.*
+attr FileLog_FBDECT_3072 logtype power4:Power,text
+attr FileLog_FBDECT_3072 room FBDECT
+
+define duSonosPlaylists dummy
+attr duSonosPlaylists event-on-change-reading state
+
+define notSonosPlaylistAbspielen notify duSonosPlaylists {SonosPlaylistStarten($EVENT)}
+
+define ZufallAbwesenheit RandomTimer *{sunset_abs()}  EG_Flur_Lampe,HUEDevice2 23:00:00 900
+attr ZufallAbwesenheit disableCond (ReadingsVal("gr_Bewohner", "state", "absent") ne "absent" and ReadingsVal("gr_Bewohner", "state", "absent") ne "gone")
+attr ZufallAbwesenheit switchmode 800/200
+
+define kuBewegungsmelder CUL_HM 20XXXXX
+attr kuBewegungsmelder IODev CUL_0
+attr kuBewegungsmelder actCycle 000:20
+attr kuBewegungsmelder actStatus alive
+attr kuBewegungsmelder autoReadReg 4_reqStatus
+attr kuBewegungsmelder expert 2_full
+attr kuBewegungsmelder firmware 1.6
+attr kuBewegungsmelder model HM-SEC-MDIR-2
+attr kuBewegungsmelder room CUL_HM,Kueche
+attr kuBewegungsmelder serialNr LEQXXXXXX
+attr kuBewegungsmelder subType motionDetector
+define FileLog_kuBewegungsmelder FileLog ./log/kuBewegungsmelder-%Y.log kuBewegungsmelder
+attr FileLog_kuBewegungsmelder logtype text
+attr FileLog_kuBewegungsmelder room CUL_HM
+
+define ActionDetector CUL_HM 000000
+attr ActionDetector event-on-change-reading .*
+attr ActionDetector model ActionDetector
+
+define tablet_ui HTTPSRV tablet/ ./www/tablet Tablet Frontend
+
+define Wetter_Proplanta PROPLANTA 53797
+attr Wetter_Proplanta forecastDays 7
+
+define NRW holiday
+
+define Fritzbox FRITZBOX
+attr Fritzbox event-on-change-reading .*
+define fbCallMonitor FB_CALLMONITOR fritz.box
+define duVerpassteAnrufe dummy
+define notAnrufe notify fbCallMonitor:event:.*missed_call { CheckAnrufe($EVENT) }
+
+define duParameter dummy
+attr duParameter readingList Licht_Daemmerung1 Licht_Daemmerung2 LichtAn_Kueche LichtAn_EGFlur LichtAn_OGFlur Sonos_Lautstaerke Weckzeit_Max Fahrzeit_Timer
+attr duParameter setList Weckzeit_Max:time Licht_Daemmerung1:slider,0,1,100 Licht_Daemmerung2:slider,0,1,100 LichtAn_Kueche:1,2,3 LichtAn_EGFlur:1,2,3 LichtAn_OGFlur:1,2,3 Sonos_Lautstaerke:slider,0,1,100 Fahrzeit_Timer:06,120,180,300,600,1800
+
+define CUL_1 CUL /dev/ttyACM1@9600 XXXX
+
+define IT_Steckdose1 IT 0F00F0FFFF FF F0
+attr IT_Steckdose1 userattr GruppeSchlafenAus GruppeSchlafenAus_map GruppeVerlassenAus GruppeVerlassenAus_map strGruppenAus strGruppenAus_map structexclude
+attr IT_Steckdose1 GruppeSchlafenAus strSzeneSchlafenAus
+attr IT_Steckdose1 GruppeVerlassenAus strSzeneVerlassenAus
+attr IT_Steckdose1 IODev CUL_1
+attr IT_Steckdose1 eventMap on:an off:aus
+attr IT_Steckdose1 model itswitch
+attr IT_Steckdose1 room Unsorted
+attr IT_Steckdose1 strGruppenAus strAlleSchalter
+
+define geofancy GEOFANCY geo
+attr geofancy devAlias XXXXXXXXXXXX:Juergen XXXXXXX:Anke
+
+define notKuechLichtAn notify kuBewegungsmelder:motion {fhem("set KuechenSteckdosen on-for-timer 300") if (getHelligkeit() > 0)}
+
+define strAlleSonosplayer structure GruppeAlleSonosplayer Sonos
+attr strAlleSonosplayer userattr GruppeVerlassenAus GruppeVerlassenAus_map structexclude
+attr strAlleSonosplayer GruppeVerlassenAus strSzeneVerlassenAus
+attr strAlleSonosplayer GruppeVerlassenAus_map [1-4]:an 0:aus
+attr strAlleSonosplayer clientstate_behavior relative
+attr strAlleSonosplayer clientstate_priority 1
+attr strAlleSonosplayer eventMap pauseall:aus
+define keBewegungsmelder CUL_HM 20XXXXX
+attr keBewegungsmelder IODev CUL_0
+attr keBewegungsmelder actCycle 000:20
+attr keBewegungsmelder actStatus alive
+attr keBewegungsmelder autoReadReg 4_reqStatus
+attr keBewegungsmelder expert 2_full
+attr keBewegungsmelder firmware 1.6
+attr keBewegungsmelder model HM-SEC-MDIR-2
+attr keBewegungsmelder peerIDs 00000000,
+attr keBewegungsmelder room CUL_HM
+attr keBewegungsmelder serialNr LEQXXXXXXX
+attr keBewegungsmelder subType motionDetector
+define FileLog_keBewegungsmelder FileLog ./log/keBewegungsmelder-%Y.log keBewegungsmelder
+attr FileLog_keBewegungsmelder logtype text
+attr FileLog_keBewegungsmelder room CUL_HM
+
+define notKellerLichtAn notify keBewegungsmelder:motion {fhem("set keSport on-for-timer 1200")}
+
+define ITSteckdose2 IT 0F000F0FFF FF F0
+attr ITSteckdose2 userattr GruppeSchlafenAus GruppeSchlafenAus_map strGruppenAus strGruppenAus_map structexclude
+attr ITSteckdose2 GruppeSchlafenAus strSzeneSchlafenAus
+attr ITSteckdose2 IODev CUL_1
+attr ITSteckdose2 eventMap on:an off:aus
+attr ITSteckdose2 strGruppenAus strAlleSchalter
+
+define not_szTV notify szTV:power.* {if(ReadingsNum("szTV","power",10) < 8 && ReadingsVal("gr_Bewohner","state","home") eq "asleep")  {fhem("set szTV off")}}
+
+define ZWDongle_2 ZWDongle /dev/ttyACM2@115200
+
+define FileLog_wzSchiebetuer_Rollade FileLog ./log/wzSchiebetuer_Rollade-%Y.log wzSchiebetuer_Rollade
+attr FileLog_wzSchiebetuer_Rollade logtype text
+attr FileLog_wzSchiebetuer_Rollade room SOMFY
+define FileLog_wzGarage_Rollade FileLog ./log/wzGarage_Rollade-%Y.log wzGarage_Rollade
+attr FileLog_wzGarage_Rollade logtype text
+attr FileLog_wzGarage_Rollade room SOMFY
+
+define Sonos SONOS localhost:4711 30
+attr Sonos userattr GruppeAlleSonosplayer GruppeAlleSonosplayer_map GruppeVerlassenAus GruppeVerlassenAus_map structexclude
+attr Sonos GruppeAlleSonosplayer strAlleSonosplayer
+attr Sonos GruppeVerlassenAus_map [1-4]:an 0:aus
+attr Sonos eventMap on:an off:aus pauseall:aus
+attr Sonos ignoredIPs 192.X.XX.XXX, 192.XXX.XXX.XX
+attr Sonos room Sonos
+attr Sonos stateFormat MasterPlayerPlayingCount
+attr Sonos targetSpeakDir /mnt/SonosSpeak
+attr Sonos targetSpeakFileTimestamp 1
+attr Sonos targetSpeakURL \\192.XXX.XXX.XXX\SonosSpeak
+attr Sonos verbose 0
+
+define Sonos_Bad SONOSPLAYER RINCON_000E58C37E4201400_MR
+attr Sonos_Bad userattr GruppeAlleSonosplayer GruppeAlleSonosplayer_map lightSceneParamsToSave lightSceneRestoreOnlyIfChanged:1,0 structexclude
+attr Sonos_Bad alias Bad
+attr Sonos_Bad generateInfoSummarize1 <NormalAudio><Artist prefix="(" suffix=")"/><Title prefix=" '" suffix="'" ifempty="[Keine Musikdatei]"/><Album prefix=" vom Album '" suffix="'"/></NormalAudio> <StreamAudio><Sender suffix=":"/><SenderCurrent prefix=" '" suffix="' -"/><SenderInfo prefix=" "/></StreamAudio>
+attr Sonos_Bad generateInfoSummarize2 <TransportState/><InfoSummarize1 prefix=" => "/>
+attr Sonos_Bad generateInfoSummarize3 <Volume prefix="Lautstärke: "/><Mute instead=" ~ Kein Ton" ifempty=" ~ Ton An" emptyval="0"/> ~ Balance: <Balance ifempty="Mitte" emptyval="0"/><HeadphoneConnected instead=" ~ Kopfhörer aktiv" ifempty=" ~ Kein Kopfhörer" emptyval="0"/>
+attr Sonos_Bad generateVolumeSlider 1
+attr Sonos_Bad getAlarms 1
+attr Sonos_Bad group Bad
+attr Sonos_Bad icon icoSONOSPLAYER_icon-S1.png
+attr Sonos_Bad minVolume 0
+attr Sonos_Bad model Sonos_S1
+attr Sonos_Bad room Sonos
+attr Sonos_Bad sortby 1
+attr Sonos_Bad stateVariable TransportState
+attr Sonos_Bad userReadings Favourites:LastActionResult.*?GetFavouritesWithCovers.* { if (ReadingsVal("Sonos_Bad", "LastActionResult", "") =~ m/.*?: (.*)/) { return $1;; } }, Radios:LastActionResult.*?GetRadiosWithCovers.* { if (ReadingsVal("Sonos_Bad", "LastActionResult", "") =~ m/.*?: (.*)/) { return $1;; } }, Playlists:LastActionResult.*?GetPlaylistsWithCovers.* { if (ReadingsVal("Sonos_Bad", "LastActionResult", "") =~ m/.*?: (.*)/) { return $1;; } }, currentTrackPosition:LastActionResult.*?GetCurrentTrackPosition.* { if (ReadingsVal("Sonos_Bad", "LastActionResult", "") =~ m/.*?: (.*)/) { return $1;; } }
+
+define Sonos_Wohnzimmer SONOSPLAYER RINCON_000E58A2516201400_MR
+attr Sonos_Wohnzimmer userattr GruppeAlleSonosplayer GruppeAlleSonosplayer_map structexclude
+attr Sonos_Wohnzimmer alias Wohnzimmer
+attr Sonos_Wohnzimmer generateInfoSummarize1 <NormalAudio><Artist prefix="(" suffix=")"/><Title prefix=" '" suffix="'" ifempty="[Keine Musikdatei]"/><Album prefix=" vom Album '" suffix="'"/></NormalAudio> <StreamAudio><Sender suffix=":"/><SenderCurrent prefix=" '" suffix="' -"/><SenderInfo prefix=" "/></StreamAudio>
+attr Sonos_Wohnzimmer generateInfoSummarize2 <TransportState/><InfoSummarize1 prefix=" => "/>
+attr Sonos_Wohnzimmer generateInfoSummarize3 <Volume prefix="Lautstärke: "/><Mute instead=" ~ Kein Ton" ifempty=" ~ Ton An" emptyval="0"/> ~ Balance: <Balance ifempty="Mitte" emptyval="0"/><HeadphoneConnected instead=" ~ Kopfhörer aktiv" ifempty=" ~ Kein Kopfhörer" emptyval="0"/>
+attr Sonos_Wohnzimmer generateVolumeSlider 1
+attr Sonos_Wohnzimmer getAlarms 1
+attr Sonos_Wohnzimmer group Wohnzimmer
+attr Sonos_Wohnzimmer icon icoSONOSPLAYER_icon-ZP90.png
+attr Sonos_Wohnzimmer minVolume 0
+attr Sonos_Wohnzimmer model Sonos_ZP90
+attr Sonos_Wohnzimmer room Sonos
+attr Sonos_Wohnzimmer sortby 1
+attr Sonos_Wohnzimmer stateVariable TransportState
+attr Sonos_Wohnzimmer userReadings Favourites:LastActionResult.*?GetFavouritesWithCovers.* { if (ReadingsVal("Sonos_Wohnzimmer", "LastActionResult", "") =~ m/.*?: (.*)/) { return $1;; } }, Radios:LastActionResult.*?GetRadiosWithCovers.* { if (ReadingsVal("Sonos_Wohnzimmer", "LastActionResult", "") =~ m/.*?: (.*)/) { return $1;; } }, Playlists:LastActionResult.*?GetPlaylistsWithCovers.* { if (ReadingsVal("Sonos_Wohnzimmer", "LastActionResult", "") =~ m/.*?: (.*)/) { return $1;; } }, currentTrackPosition:LastActionResult.*?GetCurrentTrackPosition.* { if (ReadingsVal("Sonos_Wohnzimmer", "LastActionResult", "") =~ m/.*?: (.*)/) { return $1;; } }
+
+define Sonos_Buero SONOSPLAYER RINCON_000E5874DEA001400_MR
+attr Sonos_Buero userattr GruppeAlleSonosplayer GruppeAlleSonosplayer_map structexclude
+attr Sonos_Buero GruppeAlleSonosplayer_map play:an pause:off
+attr Sonos_Buero alexaName Sonosoffice
+attr Sonos_Buero alexaRoom Büro
+attr Sonos_Buero alias Büro
+attr Sonos_Buero eventMap play:an pause:aus
+attr Sonos_Buero generateInfoSummarize1 <NormalAudio><Artist prefix="(" suffix=")"/><Title prefix=" '" suffix="'" ifempty="[Keine Musikdatei]"/><Album prefix=" vom Album '" suffix="'"/></NormalAudio> <StreamAudio><Sender suffix=":"/><SenderCurrent prefix=" '" suffix="' -"/><SenderInfo prefix=" "/></StreamAudio>
+attr Sonos_Buero generateInfoSummarize2 <TransportState/><InfoSummarize1 prefix=" => "/>
+attr Sonos_Buero generateInfoSummarize3 <Volume prefix="Lautstärke: "/><Mute instead=" ~ Kein Ton" ifempty=" ~ Ton An" emptyval="0"/> ~ Balance: <Balance ifempty="Mitte" emptyval="0"/><HeadphoneConnected instead=" ~ Kopfhörer aktiv" ifempty=" ~ Kein Kopfhörer" emptyval="0"/>
+attr Sonos_Buero generateVolumeSlider 1
+attr Sonos_Buero genericDeviceType switch
+attr Sonos_Buero getAlarms 1
+attr Sonos_Buero group Buero
+attr Sonos_Buero icon icoSONOSPLAYER_icon-S3.png
+attr Sonos_Buero minVolume 0
+attr Sonos_Buero model Sonos_S3
+attr Sonos_Buero room buero,Sonos,alexa
+attr Sonos_Buero sortby 1
+attr Sonos_Buero stateVariable TransportState
+attr Sonos_Buero userReadings Favourites:LastActionResult.*?GetFavouritesWithCovers.* { if (ReadingsVal("Sonos_Buero", "LastActionResult", "") =~ m/.*?: (.*)/) { return $1;; } }, Radios:LastActionResult.*?GetRadiosWithCovers.* { if (ReadingsVal("Sonos_Buero", "LastActionResult", "") =~ m/.*?: (.*)/) { return $1;; } }, Playlists:LastActionResult.*?GetPlaylistsWithCovers.* { if (ReadingsVal("Sonos_Buero", "LastActionResult", "") =~ m/.*?: (.*)/) { return $1;; } }, currentTrackPosition:LastActionResult.*?GetCurrentTrackPosition.* { if (ReadingsVal("Sonos_Buero", "LastActionResult", "") =~ m/.*?: (.*)/) { return $1;; } }
+
+define Sonos_Kueche SONOSPLAYER RINCON_000E5873AC2401400_MR
+attr Sonos_Kueche userattr GruppeAlleSonosplayer GruppeAlleSonosplayer_map lightSceneParamsToSave lightSceneRestoreOnlyIfChanged:1,0 structexclude
+attr Sonos_Kueche alexaName Sonos
+attr Sonos_Kueche alias Küche
+attr Sonos_Kueche eventMap play:an pause:aus
+attr Sonos_Kueche generateInfoSummarize1 <NormalAudio><Artist prefix="(" suffix=")"/><Title prefix=" '" suffix="'" ifempty="[Keine Musikdatei]"/><Album prefix=" vom Album '" suffix="'"/></NormalAudio> <StreamAudio><Sender suffix=":"/><SenderCurrent prefix=" '" suffix="' -"/><SenderInfo prefix=" "/></StreamAudio>
+attr Sonos_Kueche generateInfoSummarize2 <TransportState/><InfoSummarize1 prefix=" => "/>
+attr Sonos_Kueche generateInfoSummarize3 <Volume prefix="Lautstärke: "/><Mute instead=" ~ Kein Ton" ifempty=" ~ Ton An" emptyval="0"/> ~ Balance: <Balance ifempty="Mitte" emptyval="0"/><HeadphoneConnected instead=" ~ Kopfhörer aktiv" ifempty=" ~ Kein Kopfhörer" emptyval="0"/>
+attr Sonos_Kueche generateVolumeSlider 1
+attr Sonos_Kueche genericDeviceType switch
+attr Sonos_Kueche getAlarms 1
+attr Sonos_Kueche group Kueche
+attr Sonos_Kueche icon icoSONOSPLAYER_icon-S3.png
+attr Sonos_Kueche minVolume 0
+attr Sonos_Kueche model Sonos_S3
+attr Sonos_Kueche room Kueche,Sonos,alexa
+attr Sonos_Kueche sortby 1
+attr Sonos_Kueche stateVariable TransportState
+attr Sonos_Kueche userReadings Favourites:LastActionResult.*?GetFavouritesWithCovers.* { if (ReadingsVal("Sonos_Kueche", "LastActionResult", "") =~ m/.*?: (.*)/) { return $1;; } }, Radios:LastActionResult.*?GetRadiosWithCovers.* { if (ReadingsVal("Sonos_Kueche", "LastActionResult", "") =~ m/.*?: (.*)/) { return $1;; } }, Playlists:LastActionResult.*?GetPlaylistsWithCovers.* { if (ReadingsVal("Sonos_Kueche", "LastActionResult", "") =~ m/.*?: (.*)/) { return $1;; } }, currentTrackPosition:LastActionResult.*?GetCurrentTrackPosition.* { if (ReadingsVal("Sonos_Kueche", "LastActionResult", "") =~ m/.*?: (.*)/) { return $1;; } }
+
+define WohnzimmerHub harmony crypt:XXXXXXXXXXX crypt:XXXXXXXXX HarmonyHub
+attr WohnzimmerHub room Wohnzimmer
+define szRollade CUL_HM 20XXXXX
+attr szRollade IODev CUL_0
+attr szRollade alexaName Rollo Schlafzimmer
+attr szRollade autoReadReg 4_reqStatus
+attr szRollade eventMap on:runter off:hoch 80:lueften 100:runter 0:hoch
+attr szRollade expert 2_raw
+attr szRollade firmware 2.8
+attr szRollade genericDeviceType switch
+attr szRollade model HM-LC-BL1-FM
+attr szRollade peerIDs 00000000,
+attr szRollade room CUL_HM,Schlafzimmer,alexa
+attr szRollade serialNr MEQXXXXXX
+attr szRollade subType blindActuator
+attr szRollade webCmd statusRequest:toggleDir:on:off:up:down:stop
+define FileLog_szRollade FileLog ./log/szRollade-%Y.log szRollade
+attr FileLog_szRollade logtype text
+attr FileLog_szRollade room CUL_HM
+define rgBatterieStatus readingsGroup .*:[bB]attery
+attr rgBatterieStatus mapping %ALIAS
+attr rgBatterieStatus noheading 1
+attr rgBatterieStatus nolinks 1
+attr rgBatterieStatus notime 1
+attr rgBatterieStatus style style="text-align:left"
+attr rgBatterieStatus valueFormat { my ($wert) = $VALUE =~ m/(\d+)/;; $wert = 100 if ($VALUE eq "ok");; $wert = 49 if ($VALUE eq "low");; $wert = 0 if ($VALUE eq "critical");; return "<i class='fa fa-battery-0 red fa-2x'><span class='myhidden'>critical</i>" if ($wert < 25);; return "<i class='fa fa-battery-0 yellow fa-2x'><span class='myhidden'>low</i>" if ($wert < 50);; return "<i class='fa fa-battery-4 green fa-2x'><span class='myhidden'>ok</span></i>";;}
+attr rgBatterieStatus valueIcon {'battery.ok' => 'battery@green', 'battery.low' => 'battery@yellow', 'battery.critical' => 'battery.red'}
+
+define wzKontaktSchiebetuer CUL_HM 20XXXXX
+attr wzKontaktSchiebetuer IODev CUL_0
+attr wzKontaktSchiebetuer actCycle 028:00
+attr wzKontaktSchiebetuer actStatus alive
+attr wzKontaktSchiebetuer alias Schiebetuer
+attr wzKontaktSchiebetuer autoReadReg 4_reqStatus
+attr wzKontaktSchiebetuer devStateIcon open:fts_window_1w_open closed:fts_window_1w
+attr wzKontaktSchiebetuer expert 2_raw
+attr wzKontaktSchiebetuer firmware 2.4
+attr wzKontaktSchiebetuer group Fensterkontakte
+attr wzKontaktSchiebetuer model HM-SEC-SC-2
+attr wzKontaktSchiebetuer room CUL_HM,Wohnzimmer
+attr wzKontaktSchiebetuer serialNr MEQXXXXX
+attr wzKontaktSchiebetuer subType threeStateSensor
+define FileLog_wzKontaktSchiebetuer FileLog ./log/wzKontaktSchiebetuer-%Y.log wzKontaktSchiebetuer
+attr FileLog_wzKontaktSchiebetuer logtype text
+attr FileLog_wzKontaktSchiebetuer room CUL_HM
+
+define wzKontakt_Terrassentuer CUL_HM 20XXXXX
+attr wzKontakt_Terrassentuer IODev CUL_0
+attr wzKontakt_Terrassentuer actCycle 028:00
+attr wzKontakt_Terrassentuer actStatus unknown
+attr wzKontakt_Terrassentuer alias Terrassentuer
+attr wzKontakt_Terrassentuer autoReadReg 4_reqStatus
+attr wzKontakt_Terrassentuer devStateIcon open:fts_window_1w_open closed:fts_window_1w
+attr wzKontakt_Terrassentuer expert 2_raw
+attr wzKontakt_Terrassentuer firmware 2.4
+attr wzKontakt_Terrassentuer group Fensterkontakte
+attr wzKontakt_Terrassentuer model HM-SEC-SC-2
+attr wzKontakt_Terrassentuer room CUL_HM,Wohnzimmer
+attr wzKontakt_Terrassentuer serialNr MEQXXXXXXXXX
+attr wzKontakt_Terrassentuer subType threeStateSensor
+define FileLog_wzKontakt_Terrassentuer FileLog ./log/wzKontakt_Terrassentuer-%Y.log wzKontakt_Terrassentuer
+attr FileLog_wzKontakt_Terrassentuer logtype text
+attr FileLog_wzKontakt_Terrassentuer room CUL_HM
+
+define ogBewegungsmelder_1 ZWave XXXXX 3
+attr ogBewegungsmelder_1 IODev ZWDongle_2
+attr ogBewegungsmelder_1 classes WAKE_UP SENSOR_BINARY ASSOCIATION BATTERY MULTI_CMD CRC_16_ENCAP MANUFACTURER_SPECIFIC VERSION CONFIGURATION MULTI_CHANNEL_ASSOCIATION SENSOR_MULTILEVEL SENSOR_ALARM BASIC
+attr ogBewegungsmelder_1 room Flur,ZWave
+attr ogBewegungsmelder_1 vclasses ASSOCIATION:2 BASIC:1 BATTERY:1 CONFIGURATION:1 CRC_16_ENCAP:1 MANUFACTURER_SPECIFIC:1 MULTI_CHANNEL_ASSOCIATION:2 MULTI_CMD:1 SENSOR_ALARM:1 SENSOR_BINARY:1 SENSOR_MULTILEVEL:5 VERSION:2 WAKE_UP:1
+define FileLog_ogBewegungsmelder_1 FileLog ./log/ogBewegungsmelder_1-%Y.log ogBewegungsmelder_1
+attr FileLog_ogBewegungsmelder_1 logtype text
+attr FileLog_ogBewegungsmelder_1 room ZWave
+
+define duGast dummy
+attr duGast eventMap ja:on nein:off
+attr duGast setList ja nein
+
+define notKalenderAktion notify Kalender_Geburtstage:(start|end):.* {KalenderAktion($EVTPART0, $EVTPART1)}
+
+define ogFlur_Schlafzimmer CUL_HM 20XXXXX
+attr ogFlur_Schlafzimmer IODev CUL_0
+attr ogFlur_Schlafzimmer autoReadReg 4_reqStatus
+attr ogFlur_Schlafzimmer expert 2_raw
+attr ogFlur_Schlafzimmer firmware 1.3
+attr ogFlur_Schlafzimmer model HM-SWI-3-FM
+attr ogFlur_Schlafzimmer room CUL_HM
+attr ogFlur_Schlafzimmer serialNr MEQ0XXXXXXXX
+attr ogFlur_Schlafzimmer subType swi
+attr ogFlur_Schlafzimmer webCmd getConfig:clear msgEvents
+define FileLog_ogFlur_Schlafzimmer FileLog ./log/ogFlur_Schlafzimmer-%Y.log ogFlur_Schlafzimmer
+attr FileLog_ogFlur_Schlafzimmer logtype text
+attr FileLog_ogFlur_Schlafzimmer room CUL_HM
+
+define HM_XXXXXX_Sw_01 CUL_HM XXXXXX01
+attr HM_XXXXXX_Sw_01 model HM-SWI-3-FM
+attr HM_XXXXXX_Sw_01 peerIDs 00000000,XXXXXX01,
+define HM_XXXXXX_Sw_02 CUL_HM XXXXXX02
+attr HM_XXXXXX_Sw_02 model HM-SWI-3-FM
+attr HM_XXXXXX_Sw_02 peerIDs 00000000,
+define HM_XXXXXX_Sw_03 CUL_HM XXXXXX03
+attr HM_XXXXXX_Sw_03 model HM-SWI-3-FM
+attr HM_XXXXXX_Sw_03 peerIDs 00000000,
+define FileLog_ogFlur_Lampe FileLog ./log/ogFlur_Lampe-%Y.log ogFlur_Lampe
+attr FileLog_ogFlur_Lampe logtype text
+attr FileLog_ogFlur_Lampe room CUL_HM
+
+define ogFlur_Arbeitszimmer CUL_HM XXXXXX
+attr ogFlur_Arbeitszimmer IODev CUL_0
+attr ogFlur_Arbeitszimmer autoReadReg 4_reqStatus
+attr ogFlur_Arbeitszimmer expert 2_raw
+attr ogFlur_Arbeitszimmer firmware 1.3
+attr ogFlur_Arbeitszimmer model HM-SWI-3-FM
+attr ogFlur_Arbeitszimmer room CUL_HM,Flur
+attr ogFlur_Arbeitszimmer serialNr MEQXXXXXX
+attr ogFlur_Arbeitszimmer subType swi
+attr ogFlur_Arbeitszimmer webCmd getConfig:clear msgEvents
+define FileLog_ogFlur_Arbeitszimmer FileLog ./log/ogFlur_Arbeitszimmer-%Y.log ogFlur_Arbeitszimmer
+attr FileLog_ogFlur_Arbeitszimmer logtype text
+attr FileLog_ogFlur_Arbeitszimmer room CUL_HM
+
+define HM_XXXXXX_Sw_01 CUL_HM XXXXXX01
+attr HM_XXXXXX_Sw_01 model HM-SWI-3-FM
+attr HM_XXXXXX_Sw_01 peerIDs 00000000,
+define HM_XXXXXX_Sw_02 CUL_HM XXXXXX02
+attr HM_XXXXXX_Sw_02 model HM-SWI-3-FM
+attr HM_XXXXXX_Sw_02 peerIDs 00000000,
+define HM_XXXXXX_Sw_03 CUL_HM XXXXXX03
+attr HM_XXXXXX_Sw_03 model HM-SWI-3-FM
+attr HM_XXXXXX_Sw_03 peerIDs 00000000,
+
+define ogFlur_Lampe CUL_HM XXXXXX
+attr ogFlur_Lampe IODev CUL_0
+attr ogFlur_Lampe autoReadReg 4_reqStatus
+attr ogFlur_Lampe eventMap on:an off:aus
+attr ogFlur_Lampe expert 2_raw
+attr ogFlur_Lampe firmware 2.8
+attr ogFlur_Lampe model HM-LC-Sw1PBU-FM
+attr ogFlur_Lampe peerIDs 00000000,XXXXXX01,XXXXXX03,
+attr ogFlur_Lampe room CUL_HM,Flur
+attr ogFlur_Lampe serialNr MEQXXXXXX
+attr ogFlur_Lampe subType switch
+attr ogFlur_Lampe webCmd statusRequest:toggle:on:off
+
+define notOGFlur_Licht notify ogBewegungsmelder_1:open.* {OGFlurlichtSchalten()}
+
+define wzOnkyo ONKYO_AVR Onkyo
+attr wzOnkyo userattr lightSceneParamsToSave lightSceneRestoreOnlyIfChanged:1,0
+attr wzOnkyo cmdIcon muteT:rc_MUTE previous:rc_PREVIOUS next:rc_NEXT play:rc_PLAY pause:rc_PAUSE stop:rc_STOP shuffleT:rc_SHUFFLE repeatT:rc_REPEAT
+attr wzOnkyo devStateIcon on:rc_GREEN@green:off off:rc_STOP:on absent:rc_RED playing:rc_PLAY@green:pause paused:rc_PAUSE@green:play muted:rc_MUTE@green:muteT fast-rewind:rc_REW@green:play fast-forward:rc_FF@green:play interrupted:rc_PAUSE@yellow:play
+attr wzOnkyo inputs BD/DVD:CBL/SAT:STB/DVR:GAME:PC:AUX:AM:FM:TV/CD:PHONO:NET:USB:BLUETOOTH
+attr wzOnkyo model TX-NR636
+attr wzOnkyo stateFormat stateAV
+attr wzOnkyo webCmd volume:muteT:input:previous:next
+
+define wzEsstisch_Rollade SOMFY 000004
+attr wzEsstisch_Rollade userattr GruppeWZRolladen GruppeWZRolladen_map Gruppe_EG_Rolladen Gruppe_EG_Rolladen_map Gruppe_Standard_Rolladen Gruppe_Standard_Rolladen_map Rollade_Typ Rollade_Typ_map structexclude wzGarage_Rollade wzGarage_Rollade_map
+attr wzEsstisch_Rollade GruppeWZRolladen str_wzRolladen
+attr wzEsstisch_Rollade GruppeWZRolladen_map open:hoch closed:runter
+attr wzEsstisch_Rollade Gruppe_EG_Rolladen EG_Rolladen
+attr wzEsstisch_Rollade Gruppe_Standard_Rolladen Standard_Rolladen
+attr wzEsstisch_Rollade IODev CUL_1
+attr wzEsstisch_Rollade Rollade_Typ Alle_Rolladen
+attr wzEsstisch_Rollade alias esstischrollade
+attr wzEsstisch_Rollade event-on-change-reading state
+attr wzEsstisch_Rollade eventMap off:hoch on:runter
+attr wzEsstisch_Rollade room SOMFY,Wohnzimmer
+
+define wzGarage_Rollade SOMFY 000001
+attr wzGarage_Rollade userattr GruppeWZRolladen GruppeWZRolladen_map Gruppe_EG_Rolladen Gruppe_EG_Rolladen_map Gruppe_Standard_Rolladen Gruppe_Standard_Rolladen_map Rollade_Typ Rollade_Typ_map structexclude
+attr wzGarage_Rollade GruppeWZRolladen str_wzRolladen
+attr wzGarage_Rollade Gruppe_EG_Rolladen EG_Rolladen
+attr wzGarage_Rollade Gruppe_Standard_Rolladen Standard_Rolladen
+attr wzGarage_Rollade IODev CUL_1
+attr wzGarage_Rollade Rollade_Typ Alle_Rolladen
+attr wzGarage_Rollade drive-down-time-to-100 19
+attr wzGarage_Rollade drive-down-time-to-close 23.5
+attr wzGarage_Rollade drive-up-time-to-100 5
+attr wzGarage_Rollade drive-up-time-to-open 25
+attr wzGarage_Rollade event-on-change-reading state
+attr wzGarage_Rollade eventMap off:hoch on:runter
+attr wzGarage_Rollade room SOMFY,Wohnzimmer
+
+define wzSchiebetuer_Rollade SOMFY 222222
+attr wzSchiebetuer_Rollade userattr GruppeWZRolladen GruppeWZRolladen_map Gruppe_EG_Rolladen Gruppe_EG_Rolladen_map Rollade_Typ Rollade_Typ_map structexclude wzGarage_Rollade wzGarage_Rollade_map
+attr wzSchiebetuer_Rollade GruppeWZRolladen str_wzRolladen
+attr wzSchiebetuer_Rollade Gruppe_EG_Rolladen EG_Rolladen
+attr wzSchiebetuer_Rollade IODev CUL_1
+attr wzSchiebetuer_Rollade Rollade_Typ Alle_Rolladen
+attr wzSchiebetuer_Rollade drive-down-time-to-100 18
+attr wzSchiebetuer_Rollade drive-down-time-to-close 25
+attr wzSchiebetuer_Rollade drive-up-time-to-100 5
+attr wzSchiebetuer_Rollade drive-up-time-to-open 26
+attr wzSchiebetuer_Rollade event-on-change-reading state
+attr wzSchiebetuer_Rollade eventMap off:hoch on:runter
+attr wzSchiebetuer_Rollade room SOMFY,Wohnzimmer
+
+define wzTerrassentuer_Rollade SOMFY 000003
+attr wzTerrassentuer_Rollade userattr GruppeWZRolladen GruppeWZRolladen_map Gruppe_EG_Rolladen Gruppe_EG_Rolladen_map Rollade_Typ Rollade_Typ_map structexclude wzGarage_Rollade wzGarage_Rollade_map
+attr wzTerrassentuer_Rollade GruppeWZRolladen str_wzRolladen
+attr wzTerrassentuer_Rollade Gruppe_EG_Rolladen EG_Rolladen
+attr wzTerrassentuer_Rollade IODev CUL_1
+attr wzTerrassentuer_Rollade Rollade_Typ Alle_Rolladen
+attr wzTerrassentuer_Rollade alexaName terrasse
+attr wzTerrassentuer_Rollade drive-down-time-to-100 18
+attr wzTerrassentuer_Rollade drive-down-time-to-close 23.5
+attr wzTerrassentuer_Rollade drive-up-time-to-100 5
+attr wzTerrassentuer_Rollade drive-up-time-to-open 25.5
+attr wzTerrassentuer_Rollade event-on-change-reading state
+attr wzTerrassentuer_Rollade eventMap off:hoch on:runter
+attr wzTerrassentuer_Rollade genericDeviceType blind
+attr wzTerrassentuer_Rollade room SOMFY,Wohnzimmer,alexa
+
+define Golf_Rollade SOMFY 000006
+attr Golf_Rollade userattr Gruppe_EG_Rolladen Gruppe_EG_Rolladen_map Gruppe_Standard_Rolladen Gruppe_Standard_Rolladen_map Rollade_Typ Rollade_Typ_map structexclude
+attr Golf_Rollade Gruppe_EG_Rolladen EG_Rolladen
+attr Golf_Rollade Gruppe_Standard_Rolladen Standard_Rolladen
+attr Golf_Rollade IODev CUL_1
+attr Golf_Rollade Rollade_Typ Alle_Rolladen
+attr Golf_Rollade event-on-change-reading state
+attr Golf_Rollade eventMap off:hoch on:runter open:hoch closed:runter
+attr Golf_Rollade room SOMFY
+attr Golf_Rollade structexclude .*:eventMap
+
+define EGWC_Rollade SOMFY 000005
+attr EGWC_Rollade userattr Gruppe_EG_Rolladen Gruppe_EG_Rolladen_map Rollade_Typ Rollade_Typ_map structexclude
+attr EGWC_Rollade Gruppe_EG_Rolladen EG_Rolladen
+attr EGWC_Rollade IODev CUL_1
+attr EGWC_Rollade Rollade_Typ Alle_Rolladen
+attr EGWC_Rollade Rollade_Typ_map closed:runter open:hoch off:hoch on:runter
+attr EGWC_Rollade drive-down-time-to-100 12.6
+attr EGWC_Rollade drive-down-time-to-close 15
+attr EGWC_Rollade drive-up-time-to-100 1
+attr EGWC_Rollade drive-up-time-to-open 13.5
+attr EGWC_Rollade event-on-change-reading state
+attr EGWC_Rollade eventMap off:hoch on:runter open:hoch closed:runter
+attr EGWC_Rollade room SOMFY
+attr EGWC_Rollade structexclude .*:eventMap
+
+define NetatmoWetter netatmo ACCOUNT crypt:XXXXXXXXXXXXXXXXXXX crypt:XXXXXXXXX XXXXXXXXXXXXXX
+attr NetatmoWetter room Wohnzimmer
+
+define netatmo_D70_ee_XXXXXX netatmo 70:ee:XXXXXXXXXXXXX
+attr netatmo_D70_ee_XXXXXX IODev NetatmoWetter
+attr netatmo_D70_ee_XXXXXX alias Wohnzimm
+attr netatmo_D70_ee_XXXXXX room netatmo
+attr netatmo_D70_ee_XXXXXX stateFormat T: temperature H: humidity
+
+define netatmo_aussen netatmo MODULE 70:XXXXXXX 02:00:XXXXXXXXXX
+attr netatmo_aussen IODev NetatmoWetter
+attr netatmo_aussen alias Aussenraum
+attr netatmo_aussen room netatmo
+attr netatmo_aussen stateFormat T: temperature H: humidity
+
+define webBMW FHEMWEB 80XX global
+attr webBMW hiddenroom hiddenroom input,detail,save,Unsorted,Everything,Bad,Schlafzimmer
+attr webBMW webname webBMW
+
+define allowed_webBMW allowed webBMW
+attr allowed_webBMW allowedCommands set,get
+attr allowed_webBMW basicAuth { "$user:$password" eq "XXXXXX:XXXXX" }
+
+define duFlic dummy
+
+define duMeinBMW dummy
+
+define wzSchalter_Esstisch ZWave ddXXXXXX 4
+attr wzSchalter_Esstisch userattr lightSceneParamsToSave lightSceneRestoreOnlyIfChanged:1,0
+attr wzSchalter_Esstisch IODev ZWDongle_2
+attr wzSchalter_Esstisch alexaName Esstisch
+attr wzSchalter_Esstisch classes ZWAVEPLUS_INFO BASIC VERSION MANUFACTURER_SPECIFIC SWITCH_MULTILEVEL DEVICE_RESET_LOCALLY ASSOCIATION_GRP_INFO ASSOCIATION POWERLEVEL SECURITY FIRMWARE_UPDATE_MD CRC_16_ENCAP CONFIGURATION SENSOR_MULTILEVEL METER MULTI_CHANNEL_ASSOCIATION MULTI_CHANNEL PROTECTION ALARM SWITCH_ALL APPLICATION_STATUS MARK SCENE_ACTIVATION
+attr wzSchalter_Esstisch eventMap on:an off:aus
+attr wzSchalter_Esstisch genericDeviceType light
+attr wzSchalter_Esstisch room Wohnzimmer,ZWave,alexa
+attr wzSchalter_Esstisch vclasses ALARM:5 APPLICATION_STATUS:1 ASSOCIATION:2 ASSOCIATION_GRP_INFO:1 BASIC:1 CONFIGURATION:1 CRC_16_ENCAP:1 DEVICE_RESET_LOCALLY:1 FIRMWARE_UPDATE_MD:3 MANUFACTURER_SPECIFIC:2 METER:3 MULTI_CHANNEL:4 MULTI_CHANNEL_ASSOCIATION:3 POWERLEVEL:1 PROTECTION:2 SENSOR_MULTILEVEL:4 ZWAVEPLUS_INFO:2
+define FileLog_wzSchalter_Esstisch FileLog ./log/wzSchalter_Esstisch-%Y.log wzSchalter_Esstisch
+attr FileLog_wzSchalter_Esstisch logtype text
+attr FileLog_wzSchalter_Esstisch room ZWave
+
+define wzSchalter_EsstischSub1 ZWave ddXXXXXX 102
+5attr wzSchalter_EsstischSub1 IODev ZWDongle_2
+attr wzSchalter_EsstischSub1 classes ZWAVEPLUS_INFO BASIC VERSION SWITCH_MULTILEVEL ASSOCIATION ASSOCIATION_GRP_INFO MULTI_CHANNEL_ASSOCIATION METER SENSOR_MULTILEVEL ALARM
+attr wzSchalter_EsstischSub1 room Wohnzimmer,ZWave
+define FileLog_wzSchalter_EsstischSub1 FileLog ./log/wzSchalter_EsstischSub1-%Y.log wzSchalter_EsstischSub1
+attr FileLog_wzSchalter_EsstischSub1 logtype text
+attr FileLog_wzSchalter_EsstischSub1 room ZWave
+
+define ZWave_ZWAVEPLUS_INFO_4.02 ZWave ddXXXXXXX 1026
+attr ZWave_ZWAVEPLUS_INFO_4.02 IODev ZWDongle_2
+attr ZWave_ZWAVEPLUS_INFO_4.02 classes ZWAVEPLUS_INFO BASIC VERSION SWITCH_MULTILEVEL ASSOCIATION ASSOCIATION_GRP_INFO MULTI_CHANNEL_ASSOCIATION
+attr ZWave_ZWAVEPLUS_INFO_4.02 room ZWave
+define FileLog_ZWave_ZWAVEPLUS_INFO_4.02 FileLog ./log/ZWave_ZWAVEPLUS_INFO_4.02-%Y.log ZWave_ZWAVEPLUS_INFO_4.02
+attr FileLog_ZWave_ZWAVEPLUS_INFO_4.02 logtype text
+attr FileLog_ZWave_ZWAVEPLUS_INFO_4.02 room ZWave
+
+define netatmo_M03_XXXXXX netatmo MODULE 70:ee:XXXXX 03:00:XXXXXXXXXX
+attr netatmo_M03_XXXXXX IODev NetatmoWetter
+attr netatmo_M03_XXXXXX alias Schlafzimmer
+attr netatmo_M03_XXXXXX devStateIcon .*:no-icon
+attr netatmo_M03_XXXXXX event-on-change-reading .*
+attr netatmo_M03_XXXXXX room Schlafzimmer,netatmo
+attr netatmo_M03_XXXXXX stateFormat T: temperature H: humidity
+
+define HUESteuerung HUEBridge 192.XXX.XXX.XX
+attr HUESteuerung icon hue_filled_bridge_v2
+attr HUESteuerung key XXXXXXXXXXXXXXXX
+attr HUESteuerung room Flur
+
+define HUEDevice1 HUEDevice 1  IODev=HUESteuerung
+attr HUEDevice1 userattr lightSceneParamsToSave lightSceneRestoreOnlyIfChanged:1,0
+attr HUEDevice1 IODev HUESteuerung
+attr HUEDevice1 alias Hue Schlafzimmer
+attr HUEDevice1 color-icons 2
+attr HUEDevice1 devStateIcon {(HUEDevice_devStateIcon($name),"toggle")}
+attr HUEDevice1 icon hue_filled_white_and_color_e27_b22
+attr HUEDevice1 model LWB006
+attr HUEDevice1 room HUEDevice
+attr HUEDevice1 subType dimmer
+attr HUEDevice1 webCmd pct:toggle:on:off
+
+define HUEDevice2 HUEDevice 2  IODev=HUESteuerung
+attr HUEDevice2 userattr lightSceneParamsToSave lightSceneRestoreOnlyIfChanged:1,0
+attr HUEDevice2 IODev HUESteuerung
+attr HUEDevice2 alias Hue white lamp 2
+attr HUEDevice2 color-icons 2
+attr HUEDevice2 devStateIcon {(HUEDevice_devStateIcon($name),"toggle")}
+attr HUEDevice2 icon hue_filled_white_and_color_e27_b22
+attr HUEDevice2 model LWB006
+attr HUEDevice2 room HUEDevice
+attr HUEDevice2 subType dimmer
+attr HUEDevice2 webCmd pct:toggle:on:off
+
+define HUEGroup1 HUEDevice group 1  IODev=HUESteuerung
+attr HUEGroup1 IODev HUESteuerung
+attr HUEGroup1 alias ogFlurLicht
+attr HUEGroup1 color-icons 2
+attr HUEGroup1 delayedUpdate 1
+attr HUEGroup1 devStateIcon {(HUEDevice_devStateIcon($name),"toggle")}
+attr HUEGroup1 group HUEGroup
+attr HUEGroup1 icon hue_room_hallway
+attr HUEGroup1 room HUEDevice
+
+define HUEGroup0 HUEDevice group 0  IODev=HUESteuerung
+attr HUEGroup0 IODev HUESteuerung
+attr HUEGroup0 alias Lightset 0
+attr HUEGroup0 color-icons 2
+attr HUEGroup0 delayedUpdate 1
+attr HUEGroup0 devStateIcon {(HUEDevice_devStateIcon($name),"toggle")}
+attr HUEGroup0 group HUEGroup
+attr HUEGroup0 room HUEDevice
+
+define HarmonyControl fakeRoku
+define notHarmonyTasten notify HarmonyControl:keypress.*Up set DaemmerungSchalter toggle;;
+
+define harmony_28425881 harmony DEVICE 28425881
+attr harmony_28425881 alias Samsung-Fernseher
+attr harmony_28425881 event-on-change-reading .*
+attr harmony_28425881 room harmony
+attr harmony_28425881 stateFormat power
+
+define harmony_38838819 harmony DEVICE 38838819
+attr harmony_38838819 alias Chromecast Wohnzimmer
+attr harmony_38838819 event-on-change-reading .*
+attr harmony_38838819 room harmony
+attr harmony_38838819 stateFormat power
+
+define harmony_38838731 harmony DEVICE 38838731
+attr harmony_38838731 alias Bad Sonos (PLAY:1)
+attr harmony_38838731 event-on-change-reading .*
+attr harmony_38838731 room harmony
+attr harmony_38838731 stateFormat power
+
+define harmony_23901310 harmony DEVICE 23901310
+attr harmony_23901310 alias Google-Media Player
+attr harmony_23901310 event-on-change-reading .*
+attr harmony_23901310 room harmony
+attr harmony_23901310 stateFormat power
+
+define harmony_38840374 harmony DEVICE 38840374
+attr harmony_38840374 alias FHEM
+attr harmony_38840374 event-on-change-reading .*
+attr harmony_38840374 room harmony
+attr harmony_38840374 stateFormat power
+
+define harmony_38839092 harmony DEVICE 38839092
+attr harmony_38839092 alias Telekom DVR
+attr harmony_38839092 event-on-change-reading .*
+attr harmony_38839092 room harmony
+attr harmony_38839092 stateFormat power
+
+define harmony_23901347 harmony DEVICE 23901347
+attr harmony_23901347 alias Wohnzimmer
+attr harmony_23901347 event-on-change-reading .*
+attr harmony_23901347 room harmony
+attr harmony_23901347 stateFormat power
+
+define harmony_38838820 harmony DEVICE 38838820
+attr harmony_38838820 alias Küche Sonos (PLAY:3)
+attr harmony_38838820 event-on-change-reading .*
+attr harmony_38838820 room harmony
+attr harmony_38838820 stateFormat power
+
+define harmony_23621017 harmony DEVICE 23621017
+attr harmony_23621017 alias Media Portal
+attr harmony_23621017 event-on-change-reading .*
+attr harmony_23621017 room harmony
+attr harmony_23621017 stateFormat power
+
+define harmony_23897556 harmony DEVICE 23897556
+attr harmony_23897556 alias Onkyo-AV-Receiver
+attr harmony_23897556 event-on-change-reading .*
+attr harmony_23897556 room harmony
+attr harmony_23897556 stateFormat power
+
+define harmony_23621016 harmony DEVICE 23621016
+attr harmony_23621016 alias DVD-Rekorder
+attr harmony_23621016 event-on-change-reading .*
+attr harmony_23621016 room harmony
+attr harmony_23621016 stateFormat power
+
+define harmony_23621015 harmony DEVICE 23621015
+attr harmony_23621015 alias Media Center PC
+attr harmony_23621015 event-on-change-reading .*
+attr harmony_23621015 room harmony
+attr harmony_23621015 stateFormat power
+
+define harmony_38838732 harmony DEVICE 38838732
+attr harmony_38838732 alias Büro Sonos (PLAY:3)
+attr harmony_38838732 event-on-change-reading .*
+attr harmony_38838732 room harmony
+attr harmony_38838732 stateFormat power
+
+define HUEDevice3 HUEDevice 3  IODev=HUESteuerung
+attr HUEDevice3 userattr GruppeSchlafenAus GruppeSchlafenAus_map GruppeVerlassenAus GruppeVerlassenAus_map lightSceneParamsToSave lightSceneRestoreOnlyIfChanged:1,0 strDaemmerungEin strDaemmerungEin_map strGruppenAus strGruppenAus_map structexclude
+attr HUEDevice3 GruppeSchlafenAus_map dim[0-9]\d.:an
+attr HUEDevice3 IODev HUESteuerung
+attr HUEDevice3 alias Hue go 1
+attr HUEDevice3 color-icons 2
+attr HUEDevice3 devStateIcon {(HUEDevice_devStateIcon($name),"toggle")}
+attr HUEDevice3 event-on-change-reading state
+attr HUEDevice3 eventMap on:an off:aus pauseall:aus
+attr HUEDevice3 icon hue_filled_go
+attr HUEDevice3 model LLC020
+attr HUEDevice3 room HUEDevice,Wohnzimmer
+attr HUEDevice3 strDaemmerungEin DaemmerungSchalter
+attr HUEDevice3 strGruppenAus strAlleSchalter
+attr HUEDevice3 subType extcolordimmer
+attr HUEDevice3 webCmd rgb:rgb ff0000:rgb DEFF26:rgb 0000ff:ct 490:ct 380:ct 270:ct 160:toggle:on:off
+define HUEGroup2 HUEDevice group 2  IODev=HUESteuerung
+attr HUEGroup2 IODev HUESteuerung
+attr HUEGroup2 alias Wohnzimmer
+attr HUEGroup2 color-icons 2
+attr HUEGroup2 delayedUpdate 1
+attr HUEGroup2 devStateIcon {(HUEDevice_devStateIcon($name),"toggle")}
+attr HUEGroup2 group HUEGroup
+attr HUEGroup2 icon hue_room_living room
+attr HUEGroup2 room HUEDevice
+
+define DashButton01 PRESENCE lan-ping 192.X.XXX.XX 1
+attr DashButton01 event-on-change-reading presence,state
+attr DashButton01 ping_count 1
+
+define notDashButton01 notify DashButton01:present {InfoSprachansage()}
+
+define DiashowTV PRESENCE lan-ping  ALDISUED-TV 30 60
+attr DiashowTV event-on-change-reading state,presence
+attr DiashowTV room Wohnzimmer
+
+define harmony_39433834 harmony DEVICE 39433834
+attr harmony_39433834 alias Amazon Fire TV-Stick
+attr harmony_39433834 event-on-change-reading .*
+attr harmony_39433834 room harmony
+attr harmony_39433834 stateFormat power
+
+define HM_XXXXXX CUL_HM XXXXXX
+attr HM_XXXXXX IODev CUL_0
+attr HM_XXXXXX autoReadReg 4_reqStatus
+attr HM_XXXXXX expert 2_raw
+attr HM_XXXXXX firmware 2.8
+attr HM_XXXXXX ignore 1
+attr HM_XXXXXX model HM-LC-Bl1PBU-FM
+attr HM_XXXXXX room CUL_HM
+attr HM_XXXXXX serialNr XXXXXXX
+attr HM_XXXXXX subType blindActuator
+attr HM_XXXXXX webCmd statusRequest:toggleDir:on:off:up:down:stop
+
+define netatmo_M03_00XXXXXX netatmo MODULE 70:ee:XXXXXXXXXXXXXXXX
+attr netatmo_M03_00XXXXXX IODev NetatmoWetter
+attr netatmo_M03_00XXXXXX alias Arbeitszimmer
+attr netatmo_M03_00XXXXXX devStateIcon .*:no-icon
+attr netatmo_M03_00XXXXXX event-on-change-reading .*
+attr netatmo_M03_00XXXXXX room netatmo
+attr netatmo_M03_00XXXXXX stateFormat T: temperature H: humidity
+
+define harmony_40902983 harmony DEVICE 40902983
+attr harmony_40902983 alias Amazon Fire TV
+attr harmony_40902983 event-on-change-reading .*
+attr harmony_40902983 room harmony
+attr harmony_40902983 stateFormat power
+
+define szeneNachtlicht LightScene HUEDevice1 HUEDevice2
+
+define di_Wecker DOIF ##1 - Schaltzeiten werden geschaltet, wenn Wecker_Aktiv == on\
+([?$SELF:W_Aktiv, "off"] eq "on"\
+and ([[$SELF:W_Montag]|1]\
+or [[$SELF:W_Dienstag]|2]\
+or [[$SELF:W_Mittwoch]|3]\
+or [[$SELF:W_Donnerstag]|4]\
+or [[$SELF:W_Freitag]|5]\
+or [[$SELF:W_Samstag]|6]\
+or [[$SELF:W_Sonntag]|0]))\
+(set gr_Bewohner awoken)\
+##2 - Resetfunktion setzt Uhrzeiten auf Defaultwerte\
+DOELSEIF (["$SELF:W_Reset: on"]) \
+(	set $SELF W_Montag 07:20;; \
+	set $SELF W_Dienstag 06:40;;\
+	set $SELF W_Mittwoch 07:20;;\
+	set $SELF W_Donnerstag 07:20;;\
+	set $SELF W_Freitag 06:40;;\
+	set $SELF W_Samstag 09:00;;\
+	set $SELF W_Sonntag 09:00)
+attr di_Wecker do always
+attr di_Wecker readingList W_Aktiv W_Reset W_Montag W_Dienstag W_Mittwoch W_Donnerstag W_Freitag W_Samstag W_Sonntag
+attr di_Wecker setList W_Aktiv:on,off W_Reset:on W_Montag:time W_Dienstag:time W_Mittwoch:time W_Donnerstag:time W_Freitag:time W_Samstag:time W_Sonntag:time
+define di_RolladenSteuerung DOIF ## 1 Bei Sonnenaufgang sollen die Rolladen hoch aber nur wenn die Weckzeit erreicht wurde, spätestens aber um 9:00Uhr\
+(([{sunrise(+1800, "06:00", "09:00")}-09:00] and [rr_Anke] ne "asleep" and [rr_Juergen] ne "asleep") or [09:00]) \
+   (set duRolladenStatus hoch;; set EG_Rolladen hoch)\
+## 2 Bei Sonnenuntergang sollen Rolladen grundsätzlich runter gefahren werden.\
+## Sonderfälle werden in eigenen DOIFs je Rollade geprüft, so dass hier nur alle "Standard"-Rolladen ausgeführt werden\
+DOELSEIF ([{sunset(-1500, "16:00", "22:00")}]) \
+   (set duRolladenStatus runter;; set Standard_Rolladen runter;;)\
+## 3 Im Urlaub wird um 22:00 Uhr nochmals der runter-Befehl gesetzt\
+##   nur zur Sicherheit, da einige Somfy-Rolladen manchmal nicht schalten\
+DOELSEIF ([22:00] and [duUrlaub] eq "ja")\
+   (set Alle_Rolladen runter)\
+## Im Urlaub soll auch die Rollade im Schlafzimmer bei Sonnenaufgang hoch gehen\
+DOELSEIF ([{sunrise(0, "08:00", "09:00")}-09:00] and [duUrlaub] eq "ja")\
+   (set szRollade hoch)
+
+define duRolladenStatus dummy
+attr duRolladenStatus comment Gibt an, ob Rolladen grundsätzlich runter oder hoch sein sollten und wird für die Rolladensteuerung genutzt
+attr duRolladenStatus setList state:hoch,runter
+
+define di_szRolladeSteuerung DOIF ## 1 Rollade wird nur im Urlaub bei Sonnenaufgang hoch gefahren (sonst manuell oder durch Fensterkontakt)\
+(([duUrlaub] eq "ja" and [{sunrise(0, "06:00", "09:00")}])\
+  ## oder Fenster wird nach dem Wecken geöffnet dann Rolladen automatisch hoch\
+  or ([szKontakt] eq "open" and [gr_Bewohner] ne "asleep" and [szRollade] eq "runter")\
+  ## wenn das Fenster morgens nach dem Lüften geschlossen wird, Rollade hoch fahren\
+  or ([szKontakt] eq "closed" and [szRollade] eq "lueften" and [06:00 - {sunset(0,"16:00","22:00")}])\
+)\
+(set szRollade hoch)\
+## 2 Wenn das Fenster länger als 5 Minuten offen ist und die Temperatur ist unter 10 Grad auf Lüftung einstellen\
+DOELSEIF ([06:00-10:00] and [netatmo_aussen:temperature] < 10 and [szKontakt] eq "open" and [szRollade] eq "hoch")\
+(set szRollade lueften)\
+## 3 Wenn das Fenster geschlossen wird und es ist nach Sonnenuntergang Rollade runter fahren\
+DOELSEIF ([szKontakt] eq "closed" and [{sunset_abs(-1500,"16:00","22:00")}-{sunrise(+1800, "06:00", "09:00")}])\
+(set szRollade runter)
+attr di_szRolladeSteuerung wait 0:300:0
+
+define di_wzRolladeSchiebeuerSteuerung DOIF ## 1 Rollade runter, wenn RolladeStatus runter und Fenster geschlossen\
+([duRolladenStatus]  eq "runter" and [wzKontaktSchiebetuer] eq "closed")\
+   (set wzSchiebetuer_Rollade runter)\
+## 2 Rollade auf lüften stellen, wenn Fenster aufgemacht wird und Rollade runter ist\
+DOELSEIF ([wzSchiebetuer_Rollade] eq "runter" and [wzKontaktSchiebetuer] eq "open")\
+   (set wzSchiebetuer_Rollade lueften)\
+## 3 zur Sicherheit nochmal eine Abfrage für hoch, falls die Standard Steuerung nicht funktioniert\
+DOELSEIF ([duRolladenStatus] eq "hoch" and [wzSchiebetuer_Rollade] ne "hoch")\
+   (set wzSchiebetuer_Rollade hoch)
+define di_wzRolladeTerrassentuerSteuerung DOIF ## 1 Rollade runter, wenn RolladeStatus runter und Fenster geschlossen \
+([duRolladenStatus] eq "runter" and [wzKontakt_Terrassentuer] eq "closed")\
+   (set wzTerrassentuer_Rollade runter)\
+## 2 Rollade auf lüften stellen, wenn Fenster aufgemacht wird und Rollade runter ist\
+DOELSEIF ([wzTerrassentuer_Rollade] eq "closed" and [wzKontakt_Terrassentuer] eq "open")\
+   (set wzTerrassentuer_Rollade lueften)\
+## 3 zur Sicherheit nochmal eine Abfrage für hoch, falls die Standard Steuerung nicht funktioniert\
+DOELSEIF ([duRolladenStatus] eq "hoch" and [wzTerrassentuer_Rollade] ne "hoch")\
+   (set wzTerrassentuer_Rollade hoch)
+define di_wcRolladeSteuerung DOIF ## 1 Rollade auf lüften stellen, wenn Fenster aufgemacht wird und StatusRollade runter ist \
+([duRolladenStatus] eq "runter" and [egwcKontakt] eq "open")\
+   (set EGWC_Rollade lueften)\
+## 2 zur Sicherheit nochmal eine Abfrage für hoch, falls die Standard Steuerung nicht funktioniert\
+DOELSEIF ([duRolladenStatus] eq "runter" and [egwcKontakt] eq "closed" and [EGWC_Rollade] ne "closed")\
+   (set EGWC_Rollade runter)
+attr di_wcRolladeSteuerung do always
+
+define str_wzRolladen structure GruppeWZRolladen wzGarage_Rollade wzSchiebetuer_Rollade wzTerrassentuer_Rollade wzEsstisch_Rollade
+attr str_wzRolladen clientstate_behavior relative
+attr str_wzRolladen clientstate_priority runter|closed hoch|open
+attr str_wzRolladen eventMap on:runter off:hoch
+attr str_wzRolladen room Wohnzimmer
+
+define egwcKontakt CUL_HM 20XXXXX
+attr egwcKontakt IODev CUL_0
+attr egwcKontakt actCycle 002:50
+attr egwcKontakt actStatus alive
+attr egwcKontakt autoReadReg 4_reqStatus
+attr egwcKontakt devStateIcon open:fts_window_1w_open closed:fts_window_1w
+attr egwcKontakt expert 2_raw
+attr egwcKontakt firmware 1.0
+attr egwcKontakt group Fensterkontakte
+attr egwcKontakt model HM-SEC-SCo
+attr egwcKontakt room EG_WC,CUL_HM
+attr egwcKontakt serialNr NEQXXXXXXXX
+attr egwcKontakt subType threeStateSensor
+define FileLog_egwcKontakt FileLog ./log/egwcKontakt-%Y.log egwcKontakt
+attr FileLog_egwcKontakt logtype text
+attr FileLog_egwcKontakt room CUL_HM
+
+define szKontakt CUL_HM 4XXXXX
+attr szKontakt IODev CUL_0
+attr szKontakt actCycle 002:50
+attr szKontakt actStatus alive
+attr szKontakt autoReadReg 4_reqStatus
+attr szKontakt devStateIcon open:fts_window_1w_open closed:fts_window_1w
+attr szKontakt expert 2_raw
+attr szKontakt firmware 1.0
+attr szKontakt group Fensterkontakte
+attr szKontakt model HM-SEC-SCo
+attr szKontakt room CUL_HM,Schlafzimmer
+attr szKontakt serialNr NEQXXXXXX
+attr szKontakt subType threeStateSensor
+define FileLog_szKontakt FileLog ./log/szKontakt-%Y.log szKontakt
+attr FileLog_szKontakt logtype text
+attr FileLog_szKontakt room CUL_HM
+
+define EG_Rolladen structure Gruppe_EG_Rolladen wzGarage_Rollade EGWC_Rollade wzSchiebetuer_Rollade Kueche_Rolladen_gross Golf_Rollade wzTerrassentuer_Rollade Kueche_Rollade_klein wzEsstisch_Rollade
+attr EG_Rolladen async_delay 1
+attr EG_Rolladen clientstate_behavior relative
+attr EG_Rolladen clientstate_priority runter|closed hoch|open
+attr EG_Rolladen eventMap off:hoch on:runter
+
+define Standard_Rolladen structure Gruppe_Standard_Rolladen wzGarage_Rollade Kueche_Rolladen_gross Golf_Rollade Kueche_Rollade_klein wzEsstisch_Rollade
+attr Standard_Rolladen async_delay 1
+attr Standard_Rolladen clientstate_behavior relative
+attr Standard_Rolladen clientstate_priority runter|closed hoch|open schatten lueften
+attr Standard_Rolladen eventMap off:hoch on:runter
+
+define di_SchalterOGFlur DOIF ## auf Grund der HUE Leuchten, die durch den Bewegungsmelder geschaltet werden muss der Schalter immer an sein\
+([ogFlur_Lampe] eq "aus") (set 	\
+ogFlur_Lampe an;; set HUEGroup1 off;;)
+attr di_SchalterOGFlur do always
+
+define di_FlurLichtaus DOIF ##Flurlampe nach einiger Zeit wieder ausschalten\
+([EG_Flur_Lampe] eq "an")\
+   (set EG_Flur_Lampe aus)
+attr di_FlurLichtaus do always
+attr di_FlurLichtaus wait 180:0
+
+define MyAlexa alexa
+attr MyAlexa alexaMapping #Characteristic=<name>=<value>,...\
+On=verb=schalte,valueOn=an;;ein,valueOff=aus,valueToggle=um\
+\
+Brightness=verb=stelle,property=helligkeit,valuePrefix=auf,values=AMAZON.NUMBER,valueSuffix=prozent\
+\
+Hue=verb=stelle,valuePrefix=auf,values=rot:0;;grün:128;;blau:200\
+Hue=verb=färbe,values=rot:0;;grün:120;;blau:220\
+\
+Saturation=verb=stelle,property=sättigung,valuePrefix=auf,values=AMAZON.NUMBER\
+Saturation=verb=sättige,values=AMAZON.NUMBER\
+\
+TargetPosition=verb=mach,articles=den,values=hoch:0;;runter:100\
+#On=verb=mach,articles=die;;den,values=hoch;;runter;;lüften;;schatten\
+TargetPosition=verb=stelle,valuePrefix=auf,values=AMAZON.NUMBER,valueSuffix=prozent\
+\
+TargetTemperature=verb=stelle,valuePrefix=auf,values=AMAZON.NUMBER,valueSuffix=grad\
+\
+Volume:verb=stelle,valuePrefix=auf,values=AMAZON.NUMBER,valueSuffix=prozent\
+\
+Weckzeit=verb=stelle,valuePrefix=auf;;für,values=AMAZON.TIME,valueSuffix=uhr
+attr MyAlexa alexaTypes #Type=<alias>[,<alias2>[,...]]\
+light=licht,lampen\
+blind=rolladen,rolläden,jalousie,jalousien,rollo,rollos
+attr MyAlexa fhemIntents #IntentName=<sample utterance>\
+gutenMorgen=guten morgen\
+guteNacht=gute nacht
+attr MyAlexa room alexacontrol
+
+define FHEM.Alexa.Status dummy
+
+define FHEM.Alexa dummy
+attr FHEM.Alexa event-on-change-reading state
+attr FHEM.Alexa room alexacontrol
+attr FHEM.Alexa webCmd status:start:stop:restart
+
+define FHEM.Alexa.DOIF DOIF ([FHEM.Alexa] eq "start")  (set FHEM.Alexa on, {system ("sudo /etc/init.d/alexa start > /dev/null 2>&1 &")})  DOELSEIF ([FHEM.Alexa] eq "stop")  (set FHEM.Alexa on, {system ("sudo /etc/init.d/alexa stop > /dev/null 2>&1 &")})  DOELSEIF ([FHEM.Alexa] eq "restart")  (set FHEM.Alexa on, {system ("sudo /etc/init.d/alexa restart > /dev/null 2>&1 &")})  DOELSEIF ([FHEM.Alexa] eq "status")  (set FHEM.Alexa on, {system ("sudo /etc/init.d/alexa status > /dev/null 2>&1 &")})
+attr FHEM.Alexa.DOIF room alexacontrol
+define du_Alexa_Fernseher dummy
+attr du_Alexa_Fernseher alexaName Fernseher
+attr du_Alexa_Fernseher eventMap on:an off:aus
+attr du_Alexa_Fernseher genericDeviceType switch
+attr du_Alexa_Fernseher room alexa
+attr du_Alexa_Fernseher setList on off
+
+define di_AlexaFernseher DOIF ([du_Alexa_Fernseher] eq "an")\
+   (set WohnzimmerHub activity Fernsehen)\
+DOELSE (set WohnzimmerHub activity PowerOff)
+attr di_AlexaFernseher do always
+
+define rp_ARD readingsProxy WohnzimmerHub:activity
+attr rp_ARD alexaName das Erste
+attr rp_ARD event-on-change-reading .*
+attr rp_ARD genericDeviceType switch
+attr rp_ARD group HubAlexa
+attr rp_ARD room alexa
+attr rp_ARD setFn { return 'channel 1' if( $CMD eq 'on');; return 'back';; }
+attr rp_ARD setList on off
+attr rp_ARD valueFn { return 'on' if( $VALUE eq 'Fernsehen' );; return 'off';; }
+
+define rp_SKY readingsProxy WohnzimmerHub:activity
+attr rp_SKY alexaName Sky
+attr rp_SKY event-on-change-reading .*
+attr rp_SKY genericDeviceType switch
+attr rp_SKY group HubAlexa
+attr rp_SKY room alexa
+attr rp_SKY setFn { return 'channel 188' if( $CMD eq 'on');; return 'back';; }
+attr rp_SKY setList on off
+attr rp_SKY valueFn { return 'on' if( $VALUE eq 'Fernsehen' );; return 'off';; }
+
+define rp_VOX readingsProxy WohnzimmerHub:activity
+attr rp_VOX alexaName Vox
+attr rp_VOX genericDeviceType switch
+attr rp_VOX group HubAlexa
+attr rp_VOX room alexa
+attr rp_VOX setFn { return 'channel 6' if( $CMD eq 'on');; return 'back';; }
+attr rp_VOX setList on off
+attr rp_VOX valueFn { return 'on' if( $VALUE eq 'Fernsehen' );; return 'off';; }
+
+define du_Alexa_Wecker dummy
+attr du_Alexa_Wecker alexaName Wecker
+attr du_Alexa_Wecker genericDeviceType wecker
+attr du_Alexa_Wecker homebridgeMapping Weckzeit=state,cmd=+
+attr du_Alexa_Wecker room alexa
+
+define not_AlexaWecker notify du_Alexa_Wecker:.* {WeckerStellen()}
+
+define di_DiashowTV_Toggle DOIF ([du_Diashow] eq "an")\
+   (set harmony_39274938 command PowerToggle)\
+DOELSE (set harmony_39274938 command PowerToggle)
+
+define harmony_39274938 harmony DEVICE 39274938
+attr harmony_39274938 alias Medion TV
+attr harmony_39274938 event-on-change-reading .*
+attr harmony_39274938 room harmony
+attr harmony_39274938 stateFormat power
+
+define szeneHomeStatus LightScene wz_Lampen HUEDevice3 wzLED_C1 wzSchalter_Esstisch wzSofa wz_MultiMedia du_Diashow EG_Flur_Lampe strAlleSchalter szTV ke_Warmwasser Sonos_Bad Sonos_Kueche
+
+define rp_SkySport readingsProxy WohnzimmerHub:activity
+attr rp_SkySport alexaName Sky Sport
+attr rp_SkySport event-on-change-reading .*
+attr rp_SkySport genericDeviceType switch
+attr rp_SkySport group HubAlexa
+attr rp_SkySport room alexa
+attr rp_SkySport setFn { return 'channel 239' if( $CMD eq 'on');; return 'back';; }
+attr rp_SkySport setList on off
+attr rp_SkySport valueFn { return 'on' if( $VALUE eq 'Fernsehen' );; return 'off';; }
+
+define tablet_ftui HTTPSRV tablet_prod/ ./www/tablet_prod FTUI_Prod
+
+define du_Diashow dummy
+attr du_Diashow userattr lightSceneParamsToSave lightSceneRestoreOnlyIfChanged:1,0
+attr du_Diashow alexaName Diashow
+attr du_Diashow eventMap on:an off:aus
+attr du_Diashow genericDeviceType switch
+attr du_Diashow room alexa
+attr du_Diashow setList on off
+
+define di_FTUI_Copy DOIF (["$SELF:W_Copy: on"])\
+   ({system ('sudo cp -r -p /opt/fhem/www/tablet/* /opt/fhem/www/tablet_prod > /dev/null 2>&1 &')})
+attr di_FTUI_Copy do always
+attr di_FTUI_Copy readingList W_Copy:on
+attr di_FTUI_Copy setList W_Copy
+
+define di_HomeStatusAktionen DOIF ## Aufwachen und Frühstücken (Fahrzeit Aktualisierung alle 5 Minuten)\
+## wenn es noch dunkel ist \
+([gr_Bewohner] eq "awoken" and getHelligkeit>1)\
+   (set szeneHomeStatus scene Fruehstueck_Dunkel,{ChangeFahrzeitTimer(300)})\
+## wenn es schon hell ist\
+DOELSEIF ([gr_Bewohner] eq "awoken" and getHelligkeit<2)\
+   (set szeneHomeStatus scene Fruehstueck,{ChangeFahrzeitTimer(300)})\
+## wenn nach dem Wecken jemand in die Küche kommt, Radio oder Fernseher zum Frühstück einschalten\
+DOELSEIF ([gr_Bewohner] eq "awoken" and ["kuBewegungsmelder:motion"] and !$we)\
+   (set gr_Bewohner home)\
+   (set WohnzimmerHub activity SWR3)\
+DOELSEIF ([gr_Bewohner] eq "awoken" and ["kuBewegungsmelder:motion"] and $we)\
+   (set gr_Bewohner home)\
+   (set WohnzimmerHub activity Fernsehen)\
+## es kommt jemand nach Hause\
+## wenn es noch hell ist\
+DOELSEIF ([gr_Bewohner] eq "home" and [gr_Bewohner:lastState] ne "asleep" and getHelligkeit()<=2)\
+   (set szeneHomeStatus scene Heimkehr)\
+## wenn es schon dunkel ist\
+DOELSEIF ([gr_Bewohner] eq "home" and [gr_Bewohner:lastState] ne "asleep" and getHelligkeit()>2)\
+   (set szeneHomeStatus scene Heimkehr_Dunkel)\
+## wenn jemand zu Hause ist und es dunkel wird\
+DOELSEIF ([16:00-04:00] and [TL:"twilight"] and [?gr_Bewohner] eq "home" and ([duRolladenStatus] eq "runter" or getHelligkeit()>1))\
+   (set szeneHomeStatus scene Daemmerung)\
+## wenn es schlafen geht\
+DOELSEIF (["gr_Bewohner:asleep"])\
+   (set szeneHomeStatus scene Schlafen,set duVerpassteAnrufe 0,{SprachansageAbfall()})\
+## wenn es hell ist die Lichter ausschalten\
+DOELSEIF ([TL:"twilight"] and getHelligkeit()<2)\
+   (set szeneHomeStatus scene Tag)\
+## wenn alle weg sind\
+DOELSEIF ([gr_Bewohner] eq "absent")\
+   (set szeneHomeStatus scene Abwesend, {ChangeFahrzeitTimer(3600);;;; fhem("set pushmsgJ msg 'Alles ausgeschaltet'")})
+attr di_HomeStatusAktionen wait 0:0:0,300:0,300:0:0:0:0:0:0
+
+define FileLog_BewegungsmelderAuto FileLog ./log/BewegungsmelderAuto-%Y.log BewegungsmelderAuto
+attr FileLog_BewegungsmelderAuto logtype text
+attr FileLog_BewegungsmelderAuto room ZWave
+
+define di_AutoAlarm DOIF ([BewegungsmelderAuto] eq "open") ({fhem("set Sonos_Kueche,Sonos_Bad Speak 55 de Achtung Achtung jemand ist am Auto")})
+attr di_AutoAlarm do always
+
+define BewegungsmelderAuto ZWave ddXXXXX 6
+attr BewegungsmelderAuto IODev ZWDongle_2
+attr BewegungsmelderAuto classes SENSOR_BINARY WAKE_UP ASSOCIATION BATTERY MULTI_CMD CRC_16_ENCAP MANUFACTURER_SPECIFIC VERSION CONFIGURATION MULTI_CHANNEL_ASSOCIATION SENSOR_MULTILEVEL SENSOR_ALARM BASIC
+attr BewegungsmelderAuto event-on-change-reading state,alarm_type_00
+attr BewegungsmelderAuto room ZWave
+attr BewegungsmelderAuto vclasses ASSOCIATION:2 BASIC:1 BATTERY:1 CONFIGURATION:1 CRC_16_ENCAP:1 MANUFACTURER_SPECIFIC:1 MULTI_CHANNEL_ASSOCIATION:2 MULTI_CMD:1 SENSOR_ALARM:1 SENSOR_BINARY:1 SENSOR_MULTILEVEL:5 VERSION:2 WAKE_UP:1
+define FileLog_ZWave_SENSOR_BINARY_6 FileLog ./log/ZWave_SENSOR_BINARY_6-%Y.log ZWave_SENSOR_BINARY_6
+attr FileLog_ZWave_SENSOR_BINARY_6 logtype text
+attr FileLog_ZWave_SENSOR_BINARY_6 room ZWave
+
+define duAlexaIFTTT dummy
+attr duAlexaIFTTT room alexa
+
+define di_AlexaIFTTT DOIF ([$SELF:A_Sprachbefehl] =~ "Rollade")\
+   (set [$SELF:A_Sprachbefehl])
+attr di_AlexaIFTTT do always
+attr di_AlexaIFTTT readingList A_Sprachbefehl
+
+define allowed_WEBhook allowed
+attr allowed_WEBhook allowedCommands set,get
+attr allowed_WEBhook basicAuth { "$user:$password" eq "XXXXXX:XXXXXXXXX" }

@@ -1,0 +1,207 @@
+/*  CSS classes for FUIP styles
+    Started 2018 by Mario Stephan <mstephan@shared-files.de>
+	Thorsten Pferdekaemper (mit Marios Genehmigung)
+	"mobil" style				   
+*/
+
+/* ---- color variables ---- */
+:root{
+/* page background */
+	--fuip-color-page-background: #EEE;
+/* main cell background color */
+	--fuip-color-background: #fff;
+	--fuip-color-background-transparent: rgba(255,255,255,.5);	
+/* background when mouse hovers over, used in weatherdetail, defaults to #444 */
+	--fuip-color-background-hover: #eee;
+/* header foreground */
+	--fuip-color-header-foreground: #222;	
+/* main theme color */
+	--fuip-color-symbol-active: #0088CC;
+/* color for inactive switches/symbols */
+	--fuip-color-symbol-inactive: rgba(153, 153, 153, 0.6);
+/* color for symbol foreground */
+	--fuip-color-symbol-foreground: #eee;
+/* color for "inactive" menu items or other texts etc 
+	might be overwritten by attribute styleColor */
+	--fuip-color-foreground: #555;
+/* color for overlay of "edit only" mode. Defaults to rgba(255,255,255,.1) */	
+	--fuip-color-editonly: rgba(96,96,96,0.1);
+}
+
+
+/* colors */
+
+.gray {
+    color: #555;
+}
+
+.cold {
+    color: #0088CC;
+}
+.warm {
+    color: #c80420;
+}
+
+
+nav {
+    background-color: #1D1F20;
+    background-image: linear-gradient(145deg, #1D1F20,#404348);
+    color: #ffffff;
+}
+
+.gridster li header, .card > header, .dialog > header {
+	border-radius:0;
+    background:  var(--fuip-color-background);
+    color: var(--fuip-color-header-foreground);
+    border-bottom: 1px solid var(--fuip-color-header-foreground);
+}
+
+.uline{
+    border-bottom: 1px solid #888;
+}
+
+
+
+select {
+    color: #444;
+}
+
+svg > text {
+    fill: #444;
+}
+
+i#warn {
+    color: #FFFFFF;
+}
+i#warn-back {
+    color: #DB1D1D;
+}
+
+
+/* Slider colors */
+.range-handle {
+  background-color: #fff !important;
+}
+[data-type="slider"]:not([data-background-color]) .range-bar {
+  background-color: #bbb !important;
+}
+
+/* Weather */
+div.weather-icon.meteocons {
+    color: #999 !important;
+}
+
+/* checkbox */
+.switchery.switchery-default{
+    background-color:#0088CC !important;
+    border-color: #0088CC !important;
+    box-shadow: #0088CC 0px 0px 0px 0px !important;
+}
+
+/* pagebutton  widget */
+/* foreground on */
+[data-type="pagebutton"]:not([data-colors]):not([data-on-color]):not([data-color]) .active i#fg {
+    color: #eee !important;
+}
+/* foreground off */
+[data-type="pagebutton"]:not([data-colors]):not([data-off-color]):not([data-color]) :not(.active) i#fg {
+    color: #777 !important;
+}
+/* background on */
+[data-type="pagebutton"]:not([data-background-colors]):not([data-on-background-color]):not([data-background-color]) .active i#bg {
+    color: #666 !important;
+}
+/* background off */
+[data-type="pagebutton"]:not([data-background-colors]):not([data-off-background-color]):not([data-background-color]) :not(.active) i#bg {
+    color: rgba(21, 21, 21, 0.1) !important;
+}
+
+
+.bg-gray,.btn-gray               { background-color:#999999;}
+.bg-lightgray,.btn-lightgray     { background-color:#EDEDED;}
+
+/* pseudo classes for canvas painted widgets
+   read by ftui.getStyle() in init and reinit function  */
+
+option {background-color: #ffffff;}
+
+.thermostat{background-color:#fff;color:#888;}
+.thermostat.ticks{color:#888;}
+.thermostat.fgcolor{color:#555;}
+.thermostat.nominal{color:#444;}
+.thermostat.actual{color:#888;}
+
+.homestatus{background-color:#999;color:#0088CC;}
+.homestatus.icon{background-color:#999;color:#eee;}
+
+.slider{color:#0088CC;background-color:#999;}
+.volume.handle{color:#0088CC;}
+.volume{background-color:#fff;color:#555;}
+.volume.nominal{color:#444;}
+.wind_direction.handle{color:#0088CC;}
+.wind_direction{background-color:#fff;color:#555;}
+.wind_direction.nominal{color:#444;}
+.checkbox.on {color:#fff;background-color:#0088CC;}
+.checkbox.off {color:#fff;background-color:#999;}
+.playstream.on {color:#fff;background-color:#0088CC;}
+.playstream.off {color:#fff;background-color:#999;}
+
+
+
+
+
+/* cell headers */
+.fuip-cell-header {
+	border-radius:0;
+	background-color: var(--fuip-color-background);
+	color: var(--fuip-color-header-foreground);	
+    border-bottom: 1px solid var(--fuip-color-header-foreground);	
+}
+.fuip-cell-header.fuip-transparent {
+	background-color: var(--fuip-color-background-transparent);
+}
+
+
+/* cell */
+.fuip-cell {
+	border-radius:0;
+}
+
+/* menu item */
+div[data-type="link"].fuip-menu-item,
+.fuip-menu-item,
+div[data-type="link"].fuip-menu-item-active,
+.fuip-menu-item-active {
+	border: none;
+	border-radius: 0px;
+} 
+
+div[data-type="link"].fuip-menu-item > .linklefticon,
+.fuip-menu-item > .linklefticon,
+div[data-type="link"].fuip-menu-item-active > .linklefticon,
+.fuip-menu-item-active > .linklefticon {
+	padding-left: 2px;
+} 
+
+div[data-type="link"].fuip-menu-item,
+.fuip-menu-item {
+	background-color: var(--fuip-color-symbol-inactive);
+}
+
+div[data-type="link"].fuip-menu-item-active,
+.fuip-menu-item-active {
+	background-color: var(--fuip-color-symbol-active);
+}
+
+.fuip-color-menuitem-active {
+	color: var(--fuip-color-symbol-foreground);							  
+}
+
+
+.gridster .preview-holder {
+  background-color: var(--fuip-color-symbol-inactive);
+}
+
+.fuip-flex-fake {
+	border-radius:0;
+}

@@ -1,0 +1,142 @@
+/*  CSS classes for FUIP styles
+    Started 2018 by Mario Stephan <mstephan@shared-files.de>
+	Thorsten Pferdekaemper (mit Marios Genehmigung)
+	"darkgreen" style				   
+*/
+
+/* ---- color variables ---- */
+:root{
+/* page background */
+	--fuip-color-page-background: #222;
+/* main cell background color */
+	--fuip-color-background: #2B445A;
+	--fuip-color-background-transparent: rgba(43,68,90,.7);
+/* cell header */
+	--fuip-color-header-foreground: #D7D9E1;
+/* background when mouse hovers over, used in weatherdetail, defaults to #444 */		
+	--fuip-color-background-hover: #3F586E;
+/* main theme color */
+	--fuip-color-symbol-active: #6DE08E;
+/* color for inactive switches/symbols */
+	--fuip-color-symbol-inactive: #495C70;
+/* color for symbol foreground */
+	--fuip-color-symbol-foreground: #2A2A2A;
+/* color for "inactive" menu items or other texts etc 
+	might be overwritten by attribute styleColor */
+	--fuip-color-foreground: #667d94;
+/* color for overlay of "edit only" mode. Defaults to rgba(255,255,255,.1) */
+	--fuip-color-editonly: rgba(255,255,255,.1);		
+}
+
+
+/* colors */
+
+.gray {
+    color: #6a6a6a;
+}
+.green {
+    color: #6DE08E;
+}
+.cold {
+    color: #6DE08E;
+}
+.warm {
+    color: #6DE08E;
+}
+
+.gridster li header, .dialog > header, .card > header {
+	background-color: var(--fuip-color-background);
+    color: var(--fuip-color-header-foreground);
+}
+
+/* Slider colors */
+.range-handle {
+  background-color: #eee !important;
+}
+[data-type="slider"]:not([data-background-color]) .range-bar {
+  background-color: #495C70 !important;
+}
+[data-type="slider"]:not([data-color]) .range-quantity {
+    background-color: #6DE08E !important;
+}
+
+/* spinner colors */
+[data-type="spinner"]:not([data-color]) .spinner {
+  color: #337ab7;
+}
+[data-type="spinner"]:not([data-background-color]) .spinner {
+  background-color: #4f687b  !important;
+}
+[data-type="spinner"]:not([data-background-color]) .spinner .levelRange {
+  background-color: #6DE08E !important;
+}
+[data-type="spinner"]:not([data-background-color]) .spinner .levelArea {
+  background-color: #1B344A !important;
+}
+
+/* label widget */
+[data-type="label"].active {
+  color: #6DE08E !important;
+}
+
+polyline {
+    stroke: #32a054 !important;
+}
+
+/* circlemenu widget */
+div[data-type="circlemenu"] > .circlemenu-wrapper > .circlemenu > li {
+    background-color: #333;
+}
+div[data-type="circlemenu"] > .circlemenu-wrapper > .circlemenu li div[data-type="push"] {
+    color: #697C90;
+}
+
+/* pagebutton  widget */
+/* foreground on */
+[data-type="pagebutton"]:not([data-colors]):not([data-on-color]):not([data-color]) .active i#fg {
+    color: rgba(206, 206, 206, 0.6) !important;
+}
+/* foreground off */
+[data-type="pagebutton"]:not([data-colors]):not([data-off-color]):not([data-color]) :not(.active) i#fg {
+    color: #566d84 !important;
+}
+/* background on */
+[data-type="pagebutton"]:not([data-background-colors]):not([data-on-background-color]):not([data-background-color]) .active i#bg {
+    color: #495C70 !important;
+}
+/* background off */
+[data-type="pagebutton"]:not([data-background-colors]):not([data-off-background-color]):not([data-background-color]) :not(.active) i#bg {
+    color: rgba(21, 21, 21, 0.2) !important;
+}
+
+
+/* pseudo classes for canvas painted widgets
+   read by ftui.getStyle() in init and reinit function  */
+
+.checkbox.on{color:#eee; background-color:#6DE08E; }
+.checkbox.off{color:#eee; background-color:#505050; }
+
+.volume.handle{color:#6DE08E;}
+.volume.nominal{color:#eee;}
+.volume{background-color:#2B445A;color:#667d94;}
+
+.wind_direction.handle{color:#6DE08E;}
+.wind_direction{background-color:#2B445A;color:#667d94;}
+.wind_direction.nominal{color:#eee;}
+
+.homestatus{background-color:#768da4;color:#6DE08E;}
+.homestatus.icon{background-color:#768da4;color:#222;}
+
+.thermostat{background-color:#2B445A;color:#667d94;}
+.thermostat.max{color:#f00;}
+.thermostat.min{color:#aae;}
+
+
+/* cell headers */
+.fuip-cell-header, .dialog > header {
+	background-color: var(--fuip-color-background);
+	color: var(--fuip-color-header-foreground);			
+}
+.fuip-cell-header.fuip-transparent {
+	background-color: var(--fuip-color-background-transparent);
+}

@@ -1,0 +1,123 @@
+attr global userattr cmdIcon devStateIcon devStateIcon:textField-long devStateStyle icon sortby webCmd webCmdLabel:textField-long widgetOverride
+attr global autoload_undefined_devices 1
+attr global autosave 0
+attr global logfile ./log/fhem-%Y-%m.log
+attr global modpath .
+attr global motd SecurityCheck:\
+  WEB is not password protected\
+  telnetPort is not password protected\
+  WEBphone is not password protected\
+  WEBtablet is not password protected\
+\
+Protect this FHEM installation by defining an allowed device with define allowed allowed\
+You can disable this message with attr global motd none
+attr global statefile ./log/fhem.save
+attr global updateInBackground 1
+attr global verbose 3
+
+define telnetPort telnet 7072 global
+setuuid telnetPort 5cd80d72-f33f-a30d-1077-d883095b7046ba57
+
+define WEB FHEMWEB 8083 global
+setuuid WEB 5cd80d73-f33f-a30d-e88b-3d507ae11e10727c
+attr WEB JavaScripts codemirror/fhem_codemirror.js
+attr WEB editConfig 1
+attr WEB stylesheetPrefix f18
+
+define WEBphone FHEMWEB 8084 global
+setuuid WEBphone 5cd80d73-f33f-a30d-8f7c-99b607d788de77e8
+attr WEBphone stylesheetPrefix smallscreen
+
+define WEBtablet FHEMWEB 8085 global
+setuuid WEBtablet 5cd80d73-f33f-a30d-0180-340cccad1a2b0862
+attr WEBtablet stylesheetPrefix touchpad
+
+# Fake FileLog entry, to access the fhem log from FHEMWEB 
+define Logfile FileLog ./log/fhem-%Y-%m.log fakelog
+setuuid Logfile 5cd80d73-f33f-a30d-542c-2a20f693bfaa1bda
+
+define autocreate autocreate
+setuuid autocreate 5cd80d73-f33f-a30d-5597-b51ba43f7e01b8ad
+attr autocreate filelog ./log/%NAME-%Y.log
+
+define eventTypes eventTypes ./log/eventTypes.txt
+setuuid eventTypes 5cd80d73-f33f-a30d-6ade-ece645b457078118
+
+# Disable this to avoid looking for new USB devices on startup
+define initialUsbCheck notify global:INITIALIZED usb create
+setuuid initialUsbCheck 5cd80d73-f33f-a30d-b027-6c9357d6c2aa53b2
+
+# definiere Arduino mit Firmata (FRM) als IO-Device - Baudrate 57600 ist default im Standardfirmata Sketch
+
+# Led 13 an Device Arduino1 im Wohnzimmer
+
+# Analoge Value an Pin A0 abfragen
+define Analog0 FRM_AD 14
+setuuid Analog0 5cd82d05-f33f-a30d-4090-54d7ec92b5d5902e
+attr Analog0 room Schlafzimmer
+
+define ui FUIP
+setuuid ui 5cd8104b-f33f-a30d-1f1c-2beb440b44969442
+attr ui baseHeight 108
+attr ui baseWidth 142
+attr ui layout gridster
+define TABLETUI HTTPSRV ftui/ ./www/tablet/ Tablet-UI
+setuuid TABLETUI 5cd81065-f33f-a30d-8a01-7a604eacb109fccc
+define 1wire_Temp1 GPIO4 28-000008e5aebc
+setuuid 1wire_Temp1 5cd82dea-f33f-a30d-4040-7125d3f451743975
+attr 1wire_Temp1 event-on-update-reading temperature
+attr 1wire_Temp1 room Zimmer1
+define Abfuhkalender Calendar ical url http://169.254.12.15/Leerungstermine313707.ics 14400
+setuuid Abfuhkalender 5cd8383a-f33f-a30d-3245-619445a0af144a01
+attr Abfuhkalender room Draussen
+define Bio_Tonne dummy
+setuuid Bio_Tonne 5cd83c34-f33f-a30d-e1bb-db80aab86753036b
+attr Bio_Tonne room Draussen
+attr Bio_Tonne setList ja nein
+attr Bio_Tonne webCmd ja:nein
+define Restmeull_Tonne dummy
+setuuid Restmeull_Tonne 5cd83ca3-f33f-a30d-ccfb-2e6860ce393e5d51
+attr Restmeull_Tonne room Draussen
+attr Restmeull_Tonne setList ja nein
+attr Restmeull_Tonne webCmd ja:nein
+define Papier_Tonne dummy
+setuuid Papier_Tonne 5cd83e62-f33f-a30d-7514-22ea5667aadd5588
+attr Papier_Tonne room Draussen
+attr Papier_Tonne setList ja nein
+attr Papier_Tonne webCmd ja:nein
+define Gelber_Sack dummy
+setuuid Gelber_Sack 5cd84176-f33f-a30d-5770-dde816458caa7b4e
+attr Gelber_Sack room Draussen
+attr Gelber_Sack setList ja nein
+attr Gelber_Sack webCmd ja:nein
+define Abfuhkalender_EventStart notify Abfuhkalender:modeStarted.* { Kalenderstart("$EVENT");; }
+setuuid Abfuhkalender_EventStart 5cd842e6-f33f-a30d-b197-d3f61786fa474b9d
+attr Abfuhkalender_EventStart room Draussen
+define Abfuhkalender_EventEnde notify Abfuhkalender:modeEnded.* { Kalenderende("$EVENT");; }
+setuuid Abfuhkalender_EventEnde 5cd84399-f33f-a30d-d538-0aa9061b76e7ca82
+attr Abfuhkalender_EventEnde room Draussen
+define Arduino1 FRM /dev/ttyACM0@57600
+setuuid Arduino1 5ce2727b-f33f-a30d-3e98-7fa6e7d8cc8c0373
+attr Arduino1 sampling-interval 1000
+define Led FRM_OUT 13
+setuuid Led 5ce2728e-f33f-a30d-2550-dc7ce60c9b6738f7
+attr Led IODev Arduino1
+attr Led room Flur
+attr Led stateFormat value
+define Relay1 FRM_OUT 7
+setuuid Relay1 5ce276d8-f33f-a30d-2606-8cc4b283c714c490
+attr Relay1 IODev Arduino1
+attr Relay1 devStateIcon .*:audio_shuffle
+attr Relay1 icon audio_shuffle
+attr Relay1 room Flur
+attr Relay1 stateFormat value
+define Relay2 FRM_OUT 11
+setuuid Relay2 5ce279b1-f33f-a30d-0698-71b878794a064359
+attr Relay2 IODev Arduino1
+attr Relay2 devStateIcon .*:audio_shuffle
+attr Relay2 icon audio_shuffle
+attr Relay2 room Flur
+attr Relay2 stateFormat value
+
+define LichtimFlur notify Led:state:.*|Led:value:.* set Relay1 toggle state;;set Relay2 toggle state
+setuuid LichtimFlur 5ce291b8-f33f-a30d-d958-1b51f56d68837ab5

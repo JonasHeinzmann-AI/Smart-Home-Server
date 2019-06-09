@@ -1,0 +1,17 @@
+# Uebergabeparameter DHT22 ID 0...n
+params devID
+# Umsetzung in ECMD Befehle fuer DHT22
+get DHT cmd {"dht temp %devID\n\000dht humid %devID\n"}
+get DHT expect "-?\d+.\d\n"
+get DHT postproc {\
+ s/(.*)\n(.*)\n/T: $1 H: $2/;\
+ my $hash  = $defs{%NAME};\
+ my $temperature = $1;\
+ my $humidity = $2;\
+ my $state = $_;\
+ \
+ readingsSingleUpdate($hash, "temperature", $temperature, 1);\
+ readingsSingleUpdate($hash, "humidity", $humidity, 1);\
+ readingsSingleUpdate($hash, "state", $state, 1);\
+ \
+}

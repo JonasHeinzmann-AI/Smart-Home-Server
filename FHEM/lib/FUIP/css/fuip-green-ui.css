@@ -1,0 +1,43 @@
+/*  CSS classes for FUIP styles
+    Started 2018 by Mario Stephan <mstephan@shared-files.de>
+	Thorsten Pferdekaemper (mit Marios Genehmigung)
+	"green" style			   
+*/
+
+/* ---- color variables ---- */
+:root{
+/* main theme color */
+	--fuip-color-symbol-active: #32a054;
+/* color for "inactive" menu items or other texts etc 
+	might be overwritten by attribute styleColor */
+	--fuip-color-foreground: #EEE;
+}
+
+
+/* colors */
+
+.warm {
+    color: #32a054;
+}
+
+
+
+/* pseudo classes for canvas painted widgets
+   read by ftui.getStyle() in init and reinit function  */
+
+.checkbox.on{color:#bfbfbf; background-color:#32a054; }
+.checkbox.off{color:#bfbfbf; background-color:#505050; }
+
+.volume.handle{color:#32a054;}
+.wind_direction.handle{color:#32a054;}
+
+.homestatus{background-color:#666;color:#32a054;}
+.homestatus.icon{background-color:#777;color:#222;}
+
+.thermostat{background-color:#222;color:#7a7a7a;}
+
+
+
+
+
+

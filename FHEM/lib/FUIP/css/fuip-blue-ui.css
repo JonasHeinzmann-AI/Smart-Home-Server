@@ -1,0 +1,40 @@
+/*  color theme style addon for FTUI
+    Started 2018 by Mario Stephan <mstephan@shared-files.de>
+	Thorsten Pferdekaemper (mit Marios Genehmigung)
+	"blue" style */
+
+/* ---- color variables ---- */
+:root{ 
+/* main theme color */
+	--fuip-color-symbol-active: #337AB7; 
+/* color for "inactive" menu items or other texts etc 
+	might be overwritten by attribute styleColor*/
+	--fuip-color-foreground: #EEE; 
+}
+
+
+.cold {
+    color: #6DE08E;
+}
+.warm {
+    color: #337ab7;
+}
+
+.range-bar {
+  background-color: #404040;
+} 
+
+
+/* pseudo classes for canvas painted widgets
+   read by ftui.getStyle() in init and reinit function  */
+
+
+.checkbox.on{color:#bfbfbf; background-color:var(--fuip-color-symbol-active); }
+.checkbox.off{color:#bfbfbf; background-color:#505050; }
+
+.homestatus{background-color:#666;color:var(--fuip-color-symbol-active);}
+.homestatus.icon{background-color:#777;color:#222;}
+
+.volume.handle{color:var(--fuip-color-symbol-active);}
+.wind_direction.handle{color:var(--fuip-color-symbol-active);}
+.thermostat{background-color:#222;color:#7a7a7a;} 

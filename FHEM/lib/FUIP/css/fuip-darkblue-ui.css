@@ -1,0 +1,122 @@
+/* CSS classes for FUIP styles 
+    Started 2018 by Mario Stephan <mstephan@shared-files.de>
+	Thorsten Pferdekaemper (mit Marios Genehmigung)
+	"darkblue" style			   
+*/
+
+/* ---- color variables ---- */
+:root{
+/* main cell background color */
+	--fuip-color-background: #223343;
+	--fuip-color-background-transparent: rgba(34,51,67,.7);
+/* cell header */
+	--fuip-color-header: #3a4f5c;
+	--fuip-color-header-transparent: rgba(58,79,92,.7);
+	--fuip-color-header-foreground: #AAA;
+/* background when mouse hovers over, used in weatherdetail, defaults to #444 */	
+	--fuip-color-background-hover: #3a4f5c;
+/* main theme color */
+	--fuip-color-symbol-active: #0088CC;
+/* color for inactive switches/symbols */
+	--fuip-color-symbol-inactive: #495C70;
+/* color for symbol foreground */
+	--fuip-color-symbol-foreground: #2A2A2A;
+/* color for "inactive" menu items or other texts etc 
+	might be overwritten by attribute styleColor */
+	--fuip-color-foreground: #667d94;
+/* color for overlay of "edit only" mode. Defaults to rgba(255,255,255,.1) */
+	--fuip-color-editonly: rgba(255,255,255,.1);		
+}
+
+
+
+.red {
+    color: #e34343 !important;
+}
+
+.gray {
+    color: #6a6a6a;
+}
+.green {
+    color: #6DE08E;
+}
+.cold {
+    color: #6DE08E;
+}
+.warm {
+    color: #e34343;
+}
+
+.gridster li header, .dialog > header, .card > header {
+    color: var(--fuip-color-header-foreground);
+}
+
+/* circlemenu widget */
+div[data-type="circlemenu"] > .circlemenu-wrapper > .circlemenu > li {
+    background-color: #333;
+}
+div[data-type="circlemenu"] > .circlemenu-wrapper > .circlemenu li div[data-type="push"] {
+    color: var(--fuip-color-foreground);
+}
+
+option {background-color: #ffffff;}
+
+/* spinner colors */
+[data-type="spinner"]:not([data-background-color]) .spinner .levelArea {
+  background-color: #1B344A !important;
+}
+
+
+/* pagebutton  widget */
+/* foreground on */
+[data-type="pagebutton"]:not([data-colors]):not([data-on-color]):not([data-color]) .active i#fg {
+    color: rgba(206, 206, 206, 0.6) !important;
+}
+/* foreground off */
+[data-type="pagebutton"]:not([data-colors]):not([data-off-color]):not([data-color]) :not(.active) i#fg {
+    color: #4d6879 !important;
+}
+/* background on */
+[data-type="pagebutton"]:not([data-background-colors]):not([data-on-background-color]):not([data-background-color]) .active i#bg {
+    color: var(--fuip-color-symbol-inactive) !important;
+}
+/* background off */
+[data-type="pagebutton"]:not([data-background-colors]):not([data-off-background-color]):not([data-background-color]) :not(.active) i#bg {
+    color: rgba(21, 21, 21, 0.2) !important;
+}
+
+
+/* pseudo classes for canvas painted widgets
+   read by ftui.getStyle() in init and reinit function  */
+
+.thermostat{background-color:#1B344A;color:#667d94;}
+.thermostat.actual{color:#aaa;}
+.thermostat.nominal{color:#aaa;}
+.thermostat.min{color:#0088CC;}
+.thermostat.max{color:#f71525;}
+
+.homestatus{background-color:#667d94;color:#0088CC;}
+.homestatus.min{color:#eee;}
+.homestatus.max{color:#495C70;}
+
+.volume.handle{color:#0088CC;}
+.volume{background-color:#1B344A;color:#667d94;}
+.volume.nominal{color:#444;}
+
+.wind_direction.handle{color:#0088CC;}
+.wind_direction{background-color:#1B344A;color:#555;}
+.wind_direction.nominal{color:#444;}
+
+.checkbox.on {color:#fff;background-color:#0088CC;}
+.checkbox.off {color:#fff;background-color:#999;}
+
+.playstream.on {color:#fff;background-color:#0088CC;}
+.playstream.off {color:#fff;background-color:#999;}
+
+
+
+
+/* cell headers */
+.fuip-cell-header, .dialog > header {
+	color: var(--fuip-color-header-foreground);			
+}
